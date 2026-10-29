@@ -60,8 +60,12 @@ export default function VerifyReceiptPage({ params }: { params: Record<string, s
   );
   if (inConsole) return <RegulatorShell>{body}</RegulatorShell>;
   return (
-    <div className="min-h-screen bg-bg">
-      <div className="dots bg-navy text-on"><PublicNav /></div>
+    <div className="min-h-screen">
+      <div className="dots relative isolate overflow-hidden bg-navy text-on">
+        <span className="aurora-blob -left-40 -top-40 size-[600px] bg-[#14B8A6]/22" aria-hidden="true" />
+        <span className="aurora-blob -right-40 -top-20 size-[560px] bg-[#2F66D6]/28 [animation-delay:-10s]" aria-hidden="true" />
+        <PublicNav />
+      </div>
       <main>{body}</main>
     </div>
   );

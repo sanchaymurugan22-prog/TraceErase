@@ -3,7 +3,7 @@ import { cn } from '@/lib/format';
 import { useT } from '@/i18n/I18nProvider';
 import { Icon } from './Icon';
 
-export const inputClass = 'h-12 w-full rounded-xl border-[1.5px] border-line2 bg-card px-3.5 text-[15px] text-ink outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15 disabled:opacity-60';
+export const inputClass = 'h-12 w-full rounded-2xl border-[1.5px] border-line bg-card/90 px-4 text-[15px] text-ink outline-none transition duration-200 placeholder:text-mute/70 hover:border-line2 focus:border-accent focus:bg-card focus:ring-4 focus:ring-accent-b/20 disabled:opacity-60';
 
 export function Field({ label, htmlFor, hint, children, className }: { label?: string; htmlFor?: string; hint?: React.ReactNode; children: React.ReactNode; className?: string }) {
   return (
@@ -30,7 +30,7 @@ export function Select({ className, children, ...rest }: React.SelectHTMLAttribu
 /** Input with something inside on the left (an icon, a prefix like +91). */
 export function InputGroup({ prefix, className, dir, ...rest }: React.InputHTMLAttributes<HTMLInputElement> & { prefix: React.ReactNode }) {
   return (
-    <div dir={dir} className={cn('flex h-12 items-center gap-2.5 rounded-xl border-[1.5px] border-line2 bg-card px-3.5 focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/15', className)}>
+    <div dir={dir} className={cn('flex h-12 items-center gap-2.5 rounded-2xl border-[1.5px] border-line bg-card/90 px-4 transition hover:border-line2 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent-b/20', className)}>
       {prefix}
       <input className="min-w-0 flex-1 border-0 bg-transparent text-[15px] text-ink outline-none" {...rest} />
     </div>

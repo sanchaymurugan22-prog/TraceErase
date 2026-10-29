@@ -81,7 +81,7 @@ export default function AssistantPage() {
               </div>
             )}
             {msgs.map((m, i) => m.role === 'user' ? (
-              <div key={i} className="max-w-[78%] animate-fade self-end rounded-[18px] rounded-br-md bg-brand px-4 py-3 text-[15px] text-white">{m.text}</div>
+              <div key={i} className="max-w-[78%] animate-fade self-end rounded-[18px] rounded-br-md bg-ocean px-4 py-3 text-[15px] text-white">{m.text}</div>
             ) : (
               <div key={i} className="flex max-w-[82%] animate-fade flex-col gap-2.5 self-start rounded-[18px] rounded-bl-md border border-line bg-card px-4 py-3 text-[15px] shadow-card">
                 <span className="whitespace-pre-wrap">{m.text}</span>

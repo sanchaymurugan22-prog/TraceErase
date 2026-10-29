@@ -37,7 +37,7 @@ export default function PasskeySetupPage() {
       <Steps steps={[t('Account'), t('Verify'), t('Passkey')]} current={2} />
       <div className="flex flex-col items-center gap-6 text-center">
         <div className="flex size-44 items-center justify-center rounded-full bg-brand-s shadow-[0_0_0_14px_rgba(35,80,216,.05),0_0_0_28px_rgba(35,80,216,.03)]" aria-hidden="true">
-          <span className="flex size-28 items-center justify-center rounded-full bg-brand text-white shadow-[0_16px_40px_rgba(35,80,216,.35)]"><Icon name="finger" size="xxl" /></span>
+          <span className="flex size-28 items-center justify-center rounded-full bg-ocean text-white shadow-[0_16px_40px_rgba(35,80,216,.35)]"><Icon name="finger" size="xxl" /></span>
         </div>
         <div className="mt-4 flex flex-col gap-2"><h2 className="text-4xl font-extrabold tracking-tight">{t('Create your passkey')}</h2><p className="text-mute">{t('Your device will ask for your fingerprint, face or screen lock. Nothing leaves your device.')}</p></div>
         <div className="flex w-full flex-col gap-3 text-left">

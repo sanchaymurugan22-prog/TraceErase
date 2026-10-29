@@ -50,7 +50,7 @@ export default function SignupPage() {
         <h1 className="text-5xl font-extrabold leading-[56px] tracking-tight text-white max-[820px]:text-3xl">{t('One account.')}<br />{t('Every company covered.')}</h1>
         <p className="max-w-md text-lg leading-[30px] text-onm">{t('Companies will only ever see your protected details. Your real email and number stay with you.')}</p>
       </div>
-      <div className="flex max-w-[440px] flex-col gap-4 rounded-3xl border border-white/10 bg-navy2 p-7 shadow-[0_30px_80px_rgba(0,0,0,.35)]" aria-hidden="true">
+      <div className="flex max-w-[440px] flex-col gap-4 glass-dark rounded-[28px] p-7 shadow-[0_30px_80px_rgba(0,0,0,.35)]" aria-hidden="true">
         <div className="flex items-center justify-between"><span className="text-xs font-bold uppercase tracking-[.08em] text-accent-b">{t('Protected identity')}</span><Icon name="shieldc" className="text-accent-b" /></div>
         <div className="flex flex-col gap-1"><span className="text-[13px] text-onm">{t('Protected number')}</span><span className="font-mono text-[26px] font-bold text-white" translate="no">+91 70000 •••••</span></div>
         {[['Zomato', 'k8', 'zomato.p3x8'], ['Myntra', 'k2', 'myntra.k7f2'], ['Flipkart', 'k9', 'flipkart.q2m9']].map(([n, k, a]) => (

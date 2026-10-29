@@ -31,7 +31,10 @@ export default function ScanPage() {
   const pct = scan?.progress || 0;
   const done = scan?.status === 'done';
   return (
-    <div className="dots min-h-screen bg-navy text-on">
+    <div className="dots relative isolate min-h-screen overflow-hidden bg-navy text-on">
+        <span className="aurora-blob -left-40 -top-40 size-[600px] bg-[#14B8A6]/22" aria-hidden="true" />
+        <span className="aurora-blob -right-40 -top-20 size-[560px] bg-[#2F66D6]/28 [animation-delay:-10s]" aria-hidden="true" />
+
       <OnboardingHeader step="scan" dark />
       <main className="mx-auto flex max-w-[1280px] flex-col gap-9 px-10 py-12 max-[820px]:px-4">
         <div className="flex flex-col items-center gap-2 text-center">
@@ -40,7 +43,7 @@ export default function ScanPage() {
         </div>
         <ErrorBox error={err || (scan?.status === 'failed' && { message: scan.error })} />
         <div className="grid grid-cols-[minmax(0,1fr)_360px_minmax(0,1fr)] items-center gap-11 max-[1100px]:grid-cols-1">
-          <div className="rounded-[22px] border border-white/8 bg-navy2 p-6">
+          <div className="glass-dark rounded-[26px] p-6">
             <span className="text-xs font-bold uppercase tracking-[.08em] text-onm">{t('Sources')}</span>
             {(scan?.sources || []).map((s: any) => (
               <div key={s.key} className="flex items-center gap-3 border-b border-white/7 py-3.5 last:border-b-0">
@@ -59,7 +62,7 @@ export default function ScanPage() {
               <span className="mt-2.5 rounded-full bg-white/10 px-2.5 py-1 text-[13px] font-semibold">{t('{pct}% done', { pct })}</span>
             </div>
           </div>
-          <div className="rounded-[22px] border border-white/8 bg-navy2 p-6">
+          <div className="glass-dark rounded-[26px] p-6">
             <div className="flex items-center justify-between"><span className="text-xs font-bold uppercase tracking-[.08em] text-onm">{t('Just found')}</span>{!done && <span className="flex items-center gap-1.5 text-[13px] text-accent-b"><span className="size-2 rounded-full bg-accent-b" />{t('Live')}</span>}</div>
             {(scan?.justFound || []).map((c: any, i: number) => (
               <div key={c.name + i} className="flex animate-fade items-center gap-3 border-b border-white/7 py-3 last:border-b-0"><CompanyAvatar company={c} size="sm" /><span className="flex flex-col"><span className="font-semibold" translate="no">{c.name}</span><span className="text-[13px] text-onm">{t(c.category)}</span></span></div>

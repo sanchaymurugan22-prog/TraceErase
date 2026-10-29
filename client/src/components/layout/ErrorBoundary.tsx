@@ -21,7 +21,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { error: u
         <h1 className="text-3xl font-extrabold tracking-tight">Something went wrong on this page</h1>
         <p className="max-w-md text-mute">A newer version of TraceErase may have just been published. Reloading usually fixes it.</p>
         <div className="flex gap-2">
-          <button type="button" className="inline-flex h-11 items-center rounded-xl bg-brand px-5 font-semibold text-white" onClick={() => window.location.reload()}>Reload</button>
+          <button type="button" className="inline-flex h-11 items-center rounded-full bg-ocean px-5 font-semibold text-white" onClick={() => window.location.reload()}>Reload</button>
           <a href="/app" className="inline-flex h-11 items-center rounded-xl border border-line2 bg-card px-5 font-semibold text-ink">Go to dashboard</a>
         </div>
       </div>

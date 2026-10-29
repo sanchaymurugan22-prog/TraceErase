@@ -30,7 +30,7 @@ export default function IdentityPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen">
       <OnboardingHeader step="identity" />
       <main className="mx-auto max-w-[1200px] px-10 py-14 max-[820px]:px-4">
         <div className="grid grid-cols-2 items-center gap-16 max-[1000px]:grid-cols-1">

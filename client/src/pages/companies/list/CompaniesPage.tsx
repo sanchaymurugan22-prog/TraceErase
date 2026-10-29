@@ -92,7 +92,7 @@ export default function CompaniesPage() {
             <div className="flex gap-1.5">
               {Array.from({ length: Math.ceil(rows.length / PER_PAGE) }, (_, i) => (
                 <button key={i} onClick={() => setPage(i)} aria-current={i === page ? 'page' : undefined}
-                  className={cn('inline-flex size-9 items-center justify-center rounded-[10px] border text-sm font-semibold', i === page ? 'border-brand bg-brand text-white' : 'border-line2 bg-card text-ink hover:bg-soft')}>{i + 1}</button>
+                  className={cn('inline-flex size-9 items-center justify-center rounded-[10px] border text-sm font-semibold', i === page ? 'border-brand bg-ocean text-white' : 'border-line2 bg-card text-ink hover:bg-soft')}>{i + 1}</button>
               ))}
             </div>
           </div>

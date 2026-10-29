@@ -44,7 +44,7 @@ export default function FixAccountPage({ params }: { params: Record<string, stri
           const st = i + 1 < fix.step ? 'done' : i + 1 === fix.step ? 'now' : '';
           return (
             <div key={h} className={cn('flex items-center gap-3 rounded-2xl border-[1.5px] p-4', st === 'now' ? 'border-brand bg-card' : st === 'done' ? 'border-[#BDE8E0] bg-accent-s' : 'border-line bg-card')}>
-              <span className={cn('flex size-8 flex-none items-center justify-center rounded-full font-bold', st === 'done' ? 'bg-accent text-white' : st === 'now' ? 'bg-brand text-white' : 'bg-soft2 text-mute')}>{st === 'done' ? <Icon name="check" size="sm" /> : i + 1}</span>
+              <span className={cn('flex size-8 flex-none items-center justify-center rounded-full font-bold', st === 'done' ? 'bg-accent text-white' : st === 'now' ? 'bg-ocean text-white' : 'bg-soft2 text-mute')}>{st === 'done' ? <Icon name="check" size="sm" /> : i + 1}</span>
               <span className="flex flex-col"><span className="text-sm font-bold">{t(h)}</span><span className="text-[13px] text-mute">{t(s)}</span></span>
             </div>
           );

@@ -14,7 +14,7 @@ export function ProfileSection() {
   return (
     <SettingsCard id="profile" title={t('Profile')}>
       <div className="flex flex-wrap items-center gap-4">
-        <span className="inline-flex size-16 flex-none items-center justify-center rounded-full bg-brand font-display text-[22px] font-bold text-white" translate="no">{initials(user.name)}</span>
+        <span className="inline-flex size-16 flex-none items-center justify-center rounded-full bg-ocean font-display text-[22px] font-bold text-white" translate="no">{initials(user.name)}</span>
         <div className="flex min-w-[220px] flex-1 flex-col gap-1.5">
           <Input value={name} onChange={e => setName(e.target.value)} aria-label={t('Name')} className="max-w-[360px]" />
           <span className="text-sm text-mute">{t('Member since {date}', { date: fmtDate(user.createdAt, { year: true }) })}</span>

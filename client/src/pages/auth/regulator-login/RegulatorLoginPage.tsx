@@ -32,7 +32,7 @@ export default function RegulatorLoginPage() {
         <h1 className="text-5xl font-extrabold tracking-tight text-white max-[820px]:text-3xl">{t('Regulator console')}</h1>
         <p className="max-w-md text-lg leading-[30px] text-onm">{t('Review complaints filed by TraceErase users, with the evidence behind each one.')}</p>
       </div>
-      <div className="mb-auto flex max-w-[460px] flex-col rounded-3xl border border-white/10 bg-navy2 p-6">
+      <div className="mb-auto flex max-w-[460px] flex-col glass-dark rounded-[28px] p-6">
         {points.map(([ic, s]) => <div key={s} className="flex items-center gap-3 border-b border-white/8 py-3 text-on last:border-b-0"><Tile icon={ic} tone="dark" size="sm" /><span className="text-sm">{t(s)}</span></div>)}
       </div>
     </>}>

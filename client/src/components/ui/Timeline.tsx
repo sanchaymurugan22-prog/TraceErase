@@ -3,7 +3,7 @@ import { Icon, type IconName } from './Icon';
 
 export interface TimelineItem { icon: IconName; state?: 'done' | 'current' | 'warn' | 'todo'; title: React.ReactNode; sub?: React.ReactNode }
 
-const DOT = { done: 'bg-accent-s text-accent', current: 'bg-brand text-white', warn: 'bg-leak-s text-leak', todo: 'bg-soft2 text-mute' };
+const DOT = { done: 'bg-accent-s text-accent', current: 'bg-ocean text-white shadow-glow', warn: 'bg-leak-s text-leak', todo: 'bg-soft2 text-mute' };
 
 export function Timeline({ items }: { items: TimelineItem[] }) {
   return (
@@ -27,9 +27,9 @@ export function Steps({ steps, current }: { steps: string[]; current: number }) 
     <div className="flex items-center gap-2.5">
       {steps.map((s, i) => (
         <div key={s} className="flex items-center gap-2.5">
-          {i > 0 && <span className={cn('h-0.5 w-6', i <= current ? 'bg-accent' : 'bg-line')} />}
+          {i > 0 && <span className={cn('h-0.5 w-6 rounded-full', i <= current ? 'bg-ocean' : 'bg-line')} />}
           <span className={cn('inline-flex size-7 flex-none items-center justify-center rounded-full text-[13px] font-bold',
-            i < current ? 'bg-accent text-white' : i === current ? 'bg-brand text-white ring-4 ring-brand/20' : 'bg-soft2 text-mute')}>
+            i < current ? 'bg-accent text-white' : i === current ? 'bg-ocean text-white ring-4 ring-accent-b/20' : 'bg-soft2 text-mute')}>
             {i < current ? <Icon name="check" size="xs" /> : i + 1}
           </span>
           <span className={cn('text-sm font-semibold', i === current ? 'text-ink' : 'text-mute')}>{s}</span>

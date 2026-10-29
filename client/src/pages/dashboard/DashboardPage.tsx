@@ -42,9 +42,9 @@ export default function DashboardPage() {
       {d.leak && (
         <Card className="flex-row flex-wrap items-center gap-5 border-[#F6C4BF] bg-leak-s px-6 py-5">
           <Tile icon="siren" tone="leak" size="lg" />
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <span className="text-xl font-bold">{t('Leak caught: {sender} emailed your {company}-only address', { sender: d.leak.sender, company: d.leak.company })}</span>
-            {d.leak.source && <span className="flex items-center gap-1.5 text-sm text-ink2"><AiTag /> {t('traced it to {name}.', { name: d.leak.source })}</span>}
+          <div className="flex min-w-[220px] flex-1 flex-col gap-1">
+            <span className="text-xl font-bold max-[640px]:text-lg">{t('Leak caught: {sender} emailed your {company}-only address', { sender: d.leak.sender, company: d.leak.company })}</span>
+            {d.leak.source && <span className="flex flex-wrap items-center gap-1.5 text-sm text-ink2"><AiTag /> {t('traced it to {name}.', { name: d.leak.source })}</span>}
           </div>
           <ButtonLink to={`/app/leaks/${d.leak.id}`} variant="danger">{t('Investigate')}</ButtonLink>
         </Card>

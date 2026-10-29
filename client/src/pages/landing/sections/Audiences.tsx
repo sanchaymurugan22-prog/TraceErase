@@ -19,7 +19,9 @@ export function Audiences() {
             <span className="flex items-center gap-1.5 font-semibold text-accent">{t('See the public scores')}<Icon name="ar" size="sm" /></span>
           </CardLink>
         </div>
-        <DarkPanel className="items-center gap-5 p-14 text-center max-[820px]:p-8">
+        <DarkPanel className="isolate items-center gap-5 p-14 text-center max-[820px]:p-8">
+          <span className="aurora-blob -left-20 -top-24 size-[380px] bg-[#14B8A6]/25" aria-hidden="true" />
+          <span className="aurora-blob -bottom-24 -right-16 size-[380px] bg-[#2F66D6]/30 [animation-delay:-9s]" aria-hidden="true" />
           <h2 className="text-5xl font-extrabold tracking-tight text-white max-[820px]:text-3xl">{t('Take back your data today.')}</h2>
           <p className="text-lg text-onm">{t('Takes 3 minutes. No company has to sign up first.')}</p>
           <div className="flex flex-wrap justify-center gap-3">

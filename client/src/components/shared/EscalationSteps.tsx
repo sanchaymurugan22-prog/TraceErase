@@ -14,7 +14,7 @@ export function EscalationSteps({ steps }: { steps: DeletionRequest['steps'] }) 
         <div key={s.key} className="relative flex flex-col gap-1.5 pr-2.5">
           {i < steps.length - 1 && <span className={cn('absolute left-[30px] right-0 top-3.5 h-0.5', s.state === 'done' ? 'bg-accent' : 'bg-line')} />}
           <span className={cn('relative z-[1] flex size-[30px] items-center justify-center rounded-full',
-            s.state === 'done' ? 'bg-accent text-white' : s.state === 'current' ? 'bg-brand text-white ring-[5px] ring-brand/18' : 'bg-soft2 text-mute')}>
+            s.state === 'done' ? 'bg-accent text-white' : s.state === 'current' ? 'bg-ocean text-white ring-[5px] ring-brand/18' : 'bg-soft2 text-mute')}>
             <Icon name={s.state === 'done' ? 'check' : ICON[s.key] || 'dot'} size="sm" />
           </span>
           <span className="text-sm font-semibold">{t(s.label)}</span>

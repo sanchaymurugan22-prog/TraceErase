@@ -64,7 +64,7 @@ function AccountLog() {
         <div className="flex flex-wrap gap-2">
           {(['all', ...kinds] as Kind[]).map(k => (
             <button key={k} type="button" onClick={() => setKind(k)} aria-pressed={kind === k}
-              className={`inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-sm font-semibold transition ${kind === k ? 'border-brand bg-brand text-white' : 'border-line2 bg-card text-ink2 hover:bg-soft'}`}>
+              className={`inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-sm font-semibold transition ${kind === k ? 'border-brand bg-ocean text-white' : 'border-line2 bg-card text-ink2 hover:bg-soft'}`}>
               {k !== 'all' && <Icon name={KIND[k].icon} size="sm" />}{t(k === 'all' ? 'All' : KIND[k].label)} <span className={kind === k ? 'text-white/80' : 'text-mute'}>{k === 'all' ? all.length : all.filter(a => a.kind === k).length}</span>
             </button>
           ))}

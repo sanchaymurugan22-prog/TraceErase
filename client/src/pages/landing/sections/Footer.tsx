@@ -5,7 +5,7 @@ import { Logo } from '@/components/ui';
 export function Footer() {
   const t = useT();
   return (
-    <footer className="bg-navy px-10 py-10 text-on max-[820px]:px-4">
+    <footer className="dots bg-navy px-10 py-10 text-on max-[820px]:px-4">
       <div className="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-4">
         <Logo />
         <div className="flex flex-wrap items-center gap-6 text-[13px]">

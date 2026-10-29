@@ -12,15 +12,15 @@ export function OnboardingHeader({ step, dark }: { step: typeof STEPS[number][0]
   const t = useT();
   const idx = STEPS.findIndex(s => s[0] === step);
   return (
-    <header className={cn('flex h-[76px] items-center gap-6 px-10 max-[820px]:px-4', dark ? 'border-b border-white/8' : 'border-b border-line bg-card')}>
+    <header className={cn('flex h-[76px] items-center gap-6 px-10 max-[820px]:px-4', dark ? 'border-b border-white/8' : 'glass sticky top-0 z-30 border-b border-line/70')}>
       <Logo dark={!!dark} size={30} text={18} />
       <nav className="mx-auto flex items-center gap-2 max-[900px]:hidden" aria-label={t('Setup progress')}>
         {STEPS.map(([k, label], i) => (
           <Fragment key={k}>
-            {i > 0 && <span className={cn('h-0.5 w-9', i <= idx ? 'bg-accent' : dark ? 'bg-white/12' : 'bg-line')} />}
+            {i > 0 && <span className={cn('h-0.5 w-9', i <= idx ? 'bg-ocean' : dark ? 'bg-white/12' : 'bg-line')} />}
             <span className={cn('flex items-center gap-2 text-sm font-semibold', i === idx ? (dark ? 'text-white' : 'text-ink') : dark ? 'text-onm' : 'text-mute')}>
               <span className={cn('inline-flex size-[26px] items-center justify-center rounded-full text-xs font-bold',
-                i < idx ? 'bg-accent text-white' : i === idx ? (dark ? 'bg-white text-navy' : 'bg-brand text-white') : dark ? 'bg-white/10' : 'bg-soft2')}>
+                i < idx ? 'bg-accent text-white' : i === idx ? (dark ? 'bg-white text-navy' : 'bg-ocean text-white') : dark ? 'bg-white/10' : 'bg-soft2')}>
                 {i < idx ? <Icon name="check" size="xs" /> : i + 1}
               </span>
               {t(label)}

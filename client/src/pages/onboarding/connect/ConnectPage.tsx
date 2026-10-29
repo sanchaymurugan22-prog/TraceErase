@@ -68,7 +68,7 @@ export default function ConnectPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen">
       <OnboardingHeader step="connect" />
       <main className="mx-auto flex max-w-[1120px] flex-col gap-7 px-10 py-12 max-[820px]:px-4">
         <div className="flex flex-col items-center gap-2 text-center">

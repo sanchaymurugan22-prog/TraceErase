@@ -41,7 +41,7 @@ export default function ResultsPage() {
   const seen = (iso: string | null) => { const [tpl, n] = agoParts(iso); return iso ? t('last seen {when}', { when: t(tpl, { n }).toLowerCase() }) : t('found'); };
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen">
       <OnboardingHeader step="results" />
       <main className="mx-auto flex max-w-[1280px] flex-col gap-7 p-10 max-[820px]:px-4">
         <DarkPanel className="grid grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] items-center gap-10 p-10 max-[1000px]:grid-cols-1">
@@ -64,7 +64,7 @@ export default function ResultsPage() {
           <span className="text-sm font-semibold text-ink2">{t('Show')}</span>
           {(Object.keys(FILTERS) as Filter[]).map(f => (
             <button key={f} type="button" onClick={() => setFilter(f)} aria-pressed={filter === f}
-              className={cn('inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-sm font-semibold transition', filter === f ? 'border-brand bg-brand text-white' : 'border-line2 bg-card text-ink2 hover:bg-soft')}>
+              className={cn('inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-sm font-semibold transition', filter === f ? 'border-brand bg-ocean text-white' : 'border-line2 bg-card text-ink2 hover:bg-soft')}>
               <Icon name={FILTERS[f].icon} size="sm" />{t(FILTERS[f].label)} <span className={filter === f ? 'text-white/80' : 'text-mute'}>{counts[f]}</span>
             </button>
           ))}

@@ -6,28 +6,29 @@
   --font-display: "Manrope", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Arabic", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --color-bg: #F3F5FA;
+  --color-bg: #F2F7FA;
   --color-card: #FFFFFF;
-  --color-soft: #EEF2F9;
-  --color-soft2: #E6EBF5;
-  --color-line: #E2E7F0;
-  --color-line2: #C9D2E1;
-  --color-ink: #0A1630;
-  --color-ink2: #2B3954;
-  --color-mute: #56627A;
+  --color-edge: rgba(255, 255, 255, .7);
+  --color-soft: #EEF4F8;
+  --color-soft2: #E3ECF3;
+  --color-line: #E1EAF1;
+  --color-line2: #CAD7E3;
+  --color-ink: #0B1A2E;
+  --color-ink2: #2C3E55;
+  --color-mute: #5A6B80;
 
-  --color-navy: #0A1630;
-  --color-navy2: #12224A;
-  --color-navy3: #1B2F5E;
-  --color-on: #EAF0FA;
-  --color-onm: #A9B7CF;
+  --color-navy: #061423;
+  --color-navy2: #0C2036;
+  --color-navy3: #143152;
+  --color-on: #E8F2F7;
+  --color-onm: #A3B6C8;
 
-  --color-brand: #2350D8;
-  --color-brand-d: #1A3FB0;
-  --color-brand-s: #E8EEFD;
-  --color-accent: #0B7A6E;
+  --color-brand: #2F66D6;
+  --color-brand-d: #2453B4;
+  --color-brand-s: #E7EFFC;
+  --color-accent: #0C8577;
   --color-accent-b: #2DD4BF;
-  --color-accent-s: #DDF5F1;
+  --color-accent-s: #DDF6F1;
 
   --color-ok: #127A3E;
   --color-ok-s: #E2F4E9;
@@ -55,31 +56,43 @@
   --color-k9: #0369A1;
   --color-k10: #4D7C0F;
 
-  --shadow-card: 0 1px 2px rgba(10, 22, 48, .05), 0 4px 16px rgba(10, 22, 48, .05);
-  --shadow-pop: 0 2px 4px rgba(10, 22, 48, .06), 0 16px 40px rgba(10, 22, 48, .10);
-  --shadow-modal: 0 24px 64px rgba(10, 22, 48, .22);
+  --shadow-card: 0 1px 2px rgba(15, 50, 80, .04), 0 8px 28px -6px rgba(20, 70, 110, .09);
+  --shadow-pop: 0 2px 6px rgba(15, 50, 80, .05), 0 22px 48px -10px rgba(20, 70, 110, .18);
+  --shadow-modal: 0 30px 80px -10px rgba(6, 20, 35, .35);
+  --shadow-glow: 0 10px 30px -8px rgba(47, 102, 214, .45);
 
-  --animate-fade: fade .25s ease;
+  --animate-fade: fade .45s cubic-bezier(.2, .7, .2, 1);
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-sway: sway 20s ease-in-out infinite alternate;
+  --animate-drift: drift 22s ease-in-out infinite alternate;
+  --animate-ripple: ripple 4.5s cubic-bezier(.2, .6, .3, 1) infinite;
+  --animate-breathe: breathe 5s ease-in-out infinite;
   --animate-spin-slow: spin .8s linear infinite;
   --animate-shimmer: shimmer 1.2s infinite;
 
-  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes sway { 0% { transform: translateX(-3%) scaleY(1); } 100% { transform: translateX(3%) scaleY(1.08); } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes drift { 0% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(6%, -4%, 0) scale(1.08); } 100% { transform: translate3d(-5%, 5%, 0) scale(.96); } }
+  @keyframes ripple { 0% { transform: scale(.55); opacity: .55; } 100% { transform: scale(1.6); opacity: 0; } }
+  @keyframes breathe { 0%, 100% { opacity: .55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
   @keyframes shimmer { to { background-position: -200% 0; } }
 }
 
 /* Dark theme (Settings → Appearance) */
 :root[data-theme="dark"] {
-  --color-bg: #0B1222;
-  --color-card: #111A2E;
-  --color-soft: #18233B;
-  --color-soft2: #1F2B46;
-  --color-line: #24314F;
-  --color-line2: #33426A;
+  --color-bg: #07131F;
+  --color-edge: rgba(255, 255, 255, .06);
+  --color-card: #0E1E2E;
+  --color-soft: #13283A;
+  --color-soft2: #1A3247;
+  --color-line: #1F364B;
+  --color-line2: #2C4862;
   --color-ink: #E8EEF8;
   --color-ink2: #C3CDE0;
   --color-mute: #93A1BA;
-  --color-brand: #5B7FF0;
-  --color-brand-s: #1B2A55;
+  --color-brand: #5C93F2;
+  --color-brand-s: #15294A;
   --color-accent: #2DD4BF;
   --color-accent-s: #0E2E2B;
   --color-ok: #5FD38B;
@@ -105,31 +118,79 @@
   html, body, #root { min-height: 100%; }
   body {
     @apply bg-bg font-sans text-[15px] leading-6 text-ink antialiased;
+    /* Calm "still water" wash behind every page */
+    background-image:
+      radial-gradient(1100px 600px at 0% -10%, rgba(45, 212, 191, .10), transparent 60%),
+      radial-gradient(900px 600px at 100% 0%, rgba(47, 102, 214, .09), transparent 60%),
+      radial-gradient(900px 700px at 60% 110%, rgba(45, 212, 191, .07), transparent 60%),
+      url("/bg/contours.svg");
+    background-size: auto, auto, auto, cover;
+    background-attachment: fixed;
   }
+  :root[data-theme="dark"] body {
+    background-image:
+      radial-gradient(1100px 600px at 0% -10%, rgba(45, 212, 191, .08), transparent 60%),
+      radial-gradient(900px 600px at 100% 0%, rgba(92, 147, 242, .08), transparent 60%);
+  }
+  h1, h2 { letter-spacing: -0.02em; }
+  :focus-visible { outline: 2.5px solid rgba(45, 212, 191, .7); outline-offset: 2px; border-radius: 10px; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
   a { @apply text-brand no-underline; }
   a:hover { @apply text-brand-d; }
   button { cursor: pointer; }
   button:disabled { cursor: not-allowed; }
   h1, h2, h3, h4 { @apply font-display; }
-  ::selection { background: rgba(35, 80, 216, .2); }
+  ::selection { background: rgba(45, 212, 191, .28); }
 }
 
 @layer components {
   /* Dotted background used on dark panels */
-  .dots { background-image: radial-gradient(rgba(255, 255, 255, .075) 1px, transparent 1.2px); background-size: 22px 22px; }
+  /* Dark "ocean" panels: midnight blue with soft teal and blue aurora glows and a faint dotted texture */
+  .dots {
+    background-color: var(--color-navy);
+    background-image:
+      radial-gradient(rgba(255, 255, 255, .05) 1px, transparent 1.2px),
+      radial-gradient(60% 70% at 8% 0%, rgba(45, 212, 191, .22), transparent 70%),
+      radial-gradient(55% 60% at 100% 10%, rgba(59, 111, 224, .30), transparent 70%),
+      radial-gradient(70% 60% at 50% 115%, rgba(20, 150, 170, .20), transparent 70%),
+      linear-gradient(180deg, #071728 0%, #061423 100%);
+    background-size: 22px 22px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  }
+  .dots:not(.sticky):not(.absolute):not(.fixed) { position: relative; }
+  .dots { isolation: isolate; overflow: hidden; }
+  /* Flowing ocean currents along the bottom of every dark panel */
+  .dots::after {
+    content: ""; position: absolute; left: -10%; right: -10%; bottom: -2%; height: min(62%, 520px); z-index: -1; pointer-events: none;
+    background: url("/bg/waves.svg") center bottom / cover no-repeat;
+    -webkit-mask-image: linear-gradient(to top, #000 35%, transparent); mask-image: linear-gradient(to top, #000 35%, transparent);
+    opacity: .75; @apply animate-sway;
+  }
+  /* Data dissolving into particles: decoration for hero areas */
+  .particles { position: absolute; z-index: -1; pointer-events: none; background: url("/bg/particles.svg") center / contain no-repeat; }
+  /* Slow-moving aurora blobs (place .aurora-blob children inside a relative, overflow-hidden parent) */
+  .aurora-blob { position: absolute; z-index: -1; border-radius: 9999px; filter: blur(70px); pointer-events: none; @apply animate-drift; }
+  /* Frosted glass surfaces */
+  .glass { background: color-mix(in srgb, var(--color-card) 78%, transparent); backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4); }
+:root[data-theme="dark"] .glass { border-color: rgba(255, 255, 255, .06); }
+  .glass-dark { background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .10); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+  /* The ocean gradient used by primary buttons, highlights and progress */
+  .bg-ocean { background-image: linear-gradient(120deg, #14B8A6 0%, #2F66D6 100%); }
+  .bg-ocean-soft { background-image: linear-gradient(120deg, rgba(20, 184, 166, .12), rgba(47, 102, 214, .12)); }
+  .text-ocean { background-image: linear-gradient(100deg, #5EEAD4 0%, #7DB4FF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .text-ocean-d { background-image: linear-gradient(100deg, #0D9488 0%, #2F66D6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .dots-light { background-image: radial-gradient(rgba(10, 22, 48, .07) 1px, transparent 1.2px); background-size: 22px 22px; }
 
   /* Form controls that utilities alone can't style well */
   .checkbox {
     @apply grid size-5 flex-none cursor-pointer appearance-none place-content-center rounded-md border-[1.5px] border-line2 bg-card;
   }
-  .checkbox:checked { @apply border-brand bg-brand; }
+  .checkbox:checked { @apply border-transparent; background-image: linear-gradient(120deg, #14B8A6, #2F66D6); }
   .checkbox:checked::after { content: ""; width: 11px; height: 6px; border: 2px solid #fff; border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
   .radio { @apply size-5 flex-none cursor-pointer appearance-none rounded-full border-[1.5px] border-line2 bg-card; }
   .radio:checked { border: 6px solid var(--color-brand); }
   .switch { @apply relative h-[26px] w-11 flex-none cursor-pointer appearance-none rounded-full bg-line2 transition-colors; }
   .switch::after { content: ""; @apply absolute left-[3px] top-[3px] size-5 rounded-full bg-white shadow transition-all; }
-  .switch:checked { @apply bg-brand; }
+  .switch:checked { background-image: linear-gradient(120deg, #14B8A6, #2F66D6); }
   .switch:checked::after { left: 21px; }
 
   .skeleton {
@@ -141,8 +202,9 @@
 
   /* Tables */
   .table { @apply w-full border-collapse text-[14.5px] leading-5; }
-  .table th { @apply whitespace-nowrap border-b border-line bg-soft/50 px-4 py-3 text-start text-[12.5px] font-semibold tracking-wide text-mute; }
-  .table td { @apply border-b border-line px-4 py-3.5 align-middle; }
+  .table th { @apply whitespace-nowrap border-b border-line bg-soft/60 px-4 py-3 text-start text-[12px] font-semibold uppercase tracking-[.06em] text-mute; }
+  .table td { @apply border-b border-line/80 px-4 py-4 align-middle; }
+  .table tbody tr { transition: background-color .2s ease; }
   .table tr:last-child td { @apply border-b-0; }
   .table tbody tr:hover td { @apply bg-soft/40; }
 }

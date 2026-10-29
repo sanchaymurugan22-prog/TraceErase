@@ -39,8 +39,10 @@ export default function ScoresPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
-      <section className="dots bg-navy text-on">
+    <div className="min-h-screen">
+      <section className="dots relative isolate overflow-hidden bg-navy text-on">
+        <span className="aurora-blob -left-40 -top-40 size-[600px] bg-[#14B8A6]/22" aria-hidden="true" />
+        <span className="aurora-blob -right-40 -top-20 size-[560px] bg-[#2F66D6]/28 [animation-delay:-10s]" aria-hidden="true" />
         <PublicNav />
         <div className="mx-auto flex max-w-[1320px] flex-col gap-7 px-10 pb-16 pt-12 max-[820px]:px-4">
           <div className="flex max-w-[820px] flex-col gap-4">

@@ -9,23 +9,23 @@ export type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'white' | '
 export type Size = 'sm' | 'md' | 'lg';
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'border-transparent bg-brand text-white hover:bg-brand-d hover:text-white',
-  secondary: 'border-line2 bg-card text-ink shadow-[0_1px_2px_rgba(10,22,48,.05)] hover:bg-soft hover:text-ink',
+  primary: 'border-transparent bg-ocean text-white shadow-glow hover:-translate-y-px hover:brightness-110 hover:text-white active:translate-y-0',
+  secondary: 'border-line bg-card/90 text-ink shadow-[0_1px_2px_rgba(15,50,80,.05)] backdrop-blur hover:border-line2 hover:bg-card hover:text-ink',
   ghost: 'border-transparent bg-transparent text-brand hover:bg-brand-s',
-  danger: 'border-transparent bg-leak text-white hover:bg-[#951C12] hover:text-white',
-  white: 'border-transparent bg-white text-navy hover:bg-[#E7ECF6] hover:text-navy',
-  outline: 'border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white',
-  dark: 'border-transparent bg-navy text-white hover:bg-navy3 hover:text-white',
-  accent: 'border-transparent bg-accent text-white hover:opacity-90 hover:text-white'
+  danger: 'border-transparent bg-[linear-gradient(120deg,#E5484D,#B42318)] text-white shadow-[0_10px_26px_-10px_rgba(180,35,24,.55)] hover:-translate-y-px hover:brightness-110 hover:text-white',
+  white: 'border-transparent bg-white text-navy shadow-[0_10px_30px_-10px_rgba(45,212,191,.55)] hover:-translate-y-px hover:bg-[#F0FBFA] hover:text-navy',
+  outline: 'border-white/25 bg-white/5 text-white backdrop-blur hover:border-white/40 hover:bg-white/12 hover:text-white',
+  dark: 'border-transparent bg-[linear-gradient(120deg,#0C2036,#143152)] text-white shadow-[0_10px_26px_-12px_rgba(6,20,35,.6)] hover:-translate-y-px hover:brightness-125 hover:text-white',
+  accent: 'border-transparent bg-[linear-gradient(120deg,#14B8A6,#0C8577)] text-white shadow-[0_10px_26px_-10px_rgba(20,184,166,.55)] hover:-translate-y-px hover:brightness-110 hover:text-white'
 };
 const SIZES: Record<Size, string> = {
-  sm: 'h-9 px-3 text-sm rounded-[10px]',
-  md: 'h-11 px-[18px] text-[15px] rounded-xl',
-  lg: 'h-[52px] px-6 text-base rounded-[14px]'
+  sm: 'h-9 px-3.5 text-sm rounded-full',
+  md: 'h-11 px-5 text-[15px] rounded-full',
+  lg: 'h-[52px] px-7 text-base rounded-full'
 };
 
 export const buttonClass = (variant: Variant = 'primary', size: Size = 'md', full = false, className?: string) =>
-  cn('inline-flex items-center justify-center gap-2 whitespace-nowrap border font-semibold leading-5 no-underline transition-colors disabled:opacity-55',
+  cn('inline-flex items-center justify-center gap-2 whitespace-nowrap border font-semibold leading-5 no-underline transition-all duration-200 disabled:pointer-events-none disabled:opacity-55',
     VARIANTS[variant], SIZES[size], full && 'w-full', className);
 
 type BtnProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size; full?: boolean; loading?: boolean };
