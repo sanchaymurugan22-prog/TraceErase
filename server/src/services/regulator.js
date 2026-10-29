@@ -7,6 +7,7 @@ import { generate, withFallback, maskFor } from '../ai/gemini.js';
 import { addReceipt, verifyReceipt } from './ledger.js';
 import { createAlert } from './notify.js';
 import { withClockOf, nowIso, now, addDays } from './clock.js';
+import { audit } from './staffAudit.js';
 
 export const STATUSES = ['new', 'review', 'notice', 'decided', 'dismissed'];
 const STATUS_LABEL = { new: 'New', review: 'Under review', notice: 'Notice sent', decided: 'Decided', dismissed: 'Dismissed' };
@@ -29,9 +30,6 @@ const complainantOf = (c) => db.get('users', c.userId);
 const caseOf = (rec) => ({ status: 'new', notes: [], notices: [], history: [], ...(rec.case || {}) });
 const withUserClock = (c, fn) => withClockOf(complainantOf(c), fn);
 
-function audit(staff, action, ref, detail = '') {
-  db.insert('regaudit', { at: new Date().toISOString(), staffId: staff.id, staffEmail: staff.email, action, ref, detail });
-}
 
 function noticeState(n) {
   if (n.reply) return n.reply.complies === false ? 'disputed' : 'replied';
@@ -54,7 +52,7 @@ function pushHistory(kind, rec, staff, action, text, receiptId = null) {
   const cs = caseOf(rec);
   cs.history = [...cs.history, { at: nowIso(), by: staff.name || staff.email, action, text, receiptId }];
   db.update(COLL[kind], rec.id, { case: cs });
-  audit(staff, action, refOf(kind, rec), text);
+  audit(staff, action, refOf(kind, rec), text, { link: `/regulator/${kind === 'complaint' ? 'complaints' : 'inquiries'}/${rec.id}` });
   return cs;
 }
 
@@ -89,7 +87,7 @@ export function addNote(staff, kind, id, { text }) {
   return inClock(kind, rec, () => {
     const cs = caseOf(rec);
     db.update(COLL[kind], rec.id, { case: { ...cs, notes: [...cs.notes, { at: nowIso(), by: staff.name || staff.email, text: body }] } });
-    audit(staff, 'note', refOf(kind, rec), body.slice(0, 120));
+    audit(staff, 'note', refOf(kind, rec), `Note on ${refOf(kind, rec)}: ${body.slice(0, 120)}`, { link: `/regulator/${kind === 'complaint' ? 'complaints' : 'inquiries'}/${rec.id}` });
     return view(kind, rec.id);
   });
 }
@@ -227,7 +225,7 @@ Return JSON {"summary":"max 45 words","strength":"strong|moderate|weak","breache
   const assessment = { ...res, summary: unmask(res.summary), recommendation: unmask(res.recommendation), at: inClock(kind, rec, () => nowIso()), ai: res._ai };
   delete assessment._ai; delete assessment._aiError;
   db.update(COLL[kind], rec.id, { case: { ...caseOf(rec), assessment } });
-  audit(staff, 'assess', refOf(kind, rec), 'AI assessment');
+  audit(staff, 'assess', refOf(kind, rec), `AI assessed ${refOf(kind, rec)}: ${assessment.strength} evidence`, { link: `/regulator/${kind === 'complaint' ? 'complaints' : 'inquiries'}/${rec.id}` });
   return view(kind, rec.id);
 }
 
@@ -473,7 +471,8 @@ export function listNotices() {
 }
 
 export function auditLog() {
-  return db.all('regaudit').slice(-300).reverse();
+  const TYPE = { login: 'session', logout: 'session', 'login-failed': 'session', view: 'view', verify: 'view', assess: 'ai', draft: 'ai' };
+  return db.all('regaudit').slice(-500).reverse().map(a => ({ ...a, type: a.type || TYPE[a.action] || 'case' }));
 }
 
 /** Small numbers for the overview cards. */

@@ -18,6 +18,7 @@ import * as reqs from './services/requests.js';
 import * as evidence from './services/evidence.js';
 import * as complaints from './services/complaints.js';
 import * as reg from './services/regulator.js';
+import { describeStaffRequest, audit as staffAudit } from './services/staffAudit.js';
 import * as inbound from './services/inbound.js';
 import * as assistant from './services/assistant.js';
 import * as stats from './services/stats.js';
@@ -119,8 +120,10 @@ export function registerRoutes(app) {
   });
 
   // ---------- regulator (staff) accounts ----------
-  app.post('/api/auth/staff/login', (req, res) => staff.login(res, req.body));
-  app.post('/api/auth/staff/logout', (req, res) => { staff.logout(res); return { ok: true }; });
+  app.post('/api/auth/staff/login', (req, res) => staff.login(res, req.body, req));
+  app.post('/api/auth/staff/logout', (req, res) => { staff.logout(res, req); return { ok: true }; });
+  // Officer activity log: pages opened and AI drafts (case actions are logged where they happen)
+  app.after((req, out) => describeStaffRequest(req, out));
   app.get('/api/regulator/overview', (req) => { staff.requireRegulator(req); return stats.regulatorView(); });
   const R = (fn) => (req) => { staff.requireRegulator(req); return fn(req, req.staff); };
   const KIND = (k) => { if (k !== 'complaint' && k !== 'inquiry') throw notFound('Not found'); return k; };
@@ -379,7 +382,12 @@ export function registerRoutes(app) {
     const evidenceTargetId = subject ? db.filter('targets', x => x.userId === req.user.id && x.companyId === subject).at(-1)?.id || null : null;
     return { ...r, company: publicCompany(db.get('companies', r.companyId)), partner: r.data?.partnerCompanyId ? publicCompany(db.get('companies', r.data.partnerCompanyId)) : null, verification: verifyReceipt(r.id), evidenceTargetId };
   });
-  app.get('/api/verify/:id', (req) => verifyReceipt(req.params.id));
+  app.get('/api/verify/:id', (req) => {
+    const v = verifyReceipt(req.params.id);
+    const s = staff.currentStaff(req);
+    if (s) staffAudit(s, 'verify', req.params.id, `Checked receipt ${req.params.id}: ${!v.found ? 'not found' : v.valid ? 'genuine' : v.anchored ? 'changed after it was made' : 'genuine, waiting to be sealed'}`, { link: `/regulator/verify/${req.params.id}` });
+    return v;
+  });
 
   // ---------- activity, outbox ----------
   app.get('/api/activity/account', (req) => {

@@ -5,6 +5,7 @@ import { config } from '../config.js';
 import { db } from '../db.js';
 import { bad, unauthorized, forbidden } from '../http.js';
 import { sign, verify } from '../util/token.js';
+import { audit, deviceOf } from './staffAudit.js';
 
 const COOKIE = 'te_staff';
 
@@ -34,25 +35,31 @@ export function seedStaff() {
 export const publicStaff = (s) => s && ({ id: s.id, email: s.email, name: s.name, role: s.role, org: s.org });
 
 const attempts = new Map();
-export function login(res, { email, password }) {
+export function login(res, { email, password }, req) {
   const e = String(email || '').trim().toLowerCase();
   const n = attempts.get(e) || 0;
   if (n >= 8) throw bad('Too many attempts. Try again in a few minutes.');
   const s = db.find('staff', x => x.email === e);
   if (!s || !checkPassword(password, s.passwordHash)) {
+    if (s) audit(s, 'login-failed', '', `Failed sign-in: wrong password${deviceOf(req) ? ` (${deviceOf(req)})` : ''}`);
     attempts.set(e, n + 1);
     setTimeout(() => attempts.delete(e), 5 * 60 * 1000);
     throw bad('Email or password is not correct');
   }
   attempts.delete(e);
   db.update('staff', s.id, { lastLogin: new Date().toISOString() });
+  audit(s, 'login', '', `Signed in${deviceOf(req) ? ` with ${deviceOf(req)}` : ''}`);
   const token = sign({ sid: s.id, t: 'staff' }, 60 * 60 * 12);
   res.cookie(COOKIE, token, { maxAge: 60 * 60 * 12, ...crossSite() });
   return { staff: publicStaff(s), token };
 }
 // When the website and the API are on different domains, cookies must be SameSite=None; Secure
 const crossSite = () => (process.env.CROSS_SITE_COOKIES === 'true' ? { sameSite: 'None', secure: true } : {});
-export function logout(res) { res.cookie(COOKIE, '', { maxAge: 0 }); }
+export function logout(res, req) {
+  const s = req && currentStaff(req);
+  if (s) audit(s, 'logout', '', 'Signed out');
+  res.cookie(COOKIE, '', { maxAge: 0 });
+}
 
 export function currentStaff(req) {
   // Cookie (same site) or the X-Staff-Token header (website and API on different domains)
