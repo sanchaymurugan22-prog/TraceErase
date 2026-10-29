@@ -1,6 +1,7 @@
 // Public receipt verification: anyone can check a receipt ID against the ledger.
 import { useState } from 'react';
-import { useNavigate } from '@/lib/router';
+import { useNavigate, useRouter } from '@/lib/router';
+import { RegulatorShell } from '@/components/layout/RegulatorShell';
 import { useT } from '@/i18n/I18nProvider';
 import { useApi } from '@/hooks/useApi';
 import { fmtDateTime, shortHash } from '@/lib/format';
@@ -10,18 +11,19 @@ import { Banner, Button, Card, ErrorBox, Icon, Input, KeyValue, Spinner } from '
 export default function VerifyReceiptPage({ params }: { params: Record<string, string> }) {
   const t = useT();
   const navigate = useNavigate();
+  const { path } = useRouter();
+  const inConsole = path.startsWith('/regulator');
+  const base = inConsole ? '/regulator/verify/' : '/verify/';
   const [id, setId] = useState(params.id || '');
   const { data, error, loading } = useApi<any>(params.id ? '/verify/' + params.id : null);
 
-  return (
-    <div className="min-h-screen bg-bg">
-      <div className="dots bg-navy text-on"><PublicNav /></div>
-      <main className="mx-auto flex max-w-[760px] flex-col gap-5 px-6 py-10">
+  const body = (
+      <div className={inConsole ? 'flex max-w-[820px] flex-col gap-5' : 'mx-auto flex max-w-[760px] flex-col gap-5 px-6 py-10'}>
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl font-extrabold tracking-tight">{t('Verify a receipt')}</h1>
           <p className="text-mute">{t('Every important step of a deletion (your signed request, a company\'s reply, a certificate) gets a receipt with its own code. Paste that code here to check the record is genuine and has not been changed since it was made. Anyone can do this without an account: a company, a lawyer or the Data Protection Board.')}</p>
         </div>
-        <form className="flex gap-2" onSubmit={e => { e.preventDefault(); if (id.trim()) navigate('/verify/' + encodeURIComponent(id.trim())); }}>
+        <form className="flex gap-2" onSubmit={e => { e.preventDefault(); if (id.trim()) navigate(base + encodeURIComponent(id.trim())); }}>
           <Input value={id} onChange={e => setId(e.target.value)} placeholder={t('Receipt ID')} aria-label={t('Receipt ID')} className="font-mono" />
           <Button type="submit" size="lg"><Icon name="shieldc" />{t('Verify')}</Button>
         </form>
@@ -54,7 +56,13 @@ export default function VerifyReceiptPage({ params }: { params: Record<string, s
             <div key={i} className="flex items-start gap-3 text-sm text-ink2"><span className="inline-flex size-8 flex-none items-center justify-center rounded-lg bg-accent-s text-accent"><Icon name={ic as any} size="sm" /></span><span>{t(txt)}</span></div>
           ))}
         </Card>
-      </main>
+      </div>
+  );
+  if (inConsole) return <RegulatorShell>{body}</RegulatorShell>;
+  return (
+    <div className="min-h-screen bg-bg">
+      <div className="dots bg-navy text-on"><PublicNav /></div>
+      <main>{body}</main>
     </div>
   );
 }

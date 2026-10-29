@@ -13,7 +13,7 @@ const COLLECTIONS = [
   'users', 'otps', 'passkeys', 'challenges', 'addresses', 'companies', 'holdings', 'scans',
   'policies', 'requests', 'targets', 'receipts', 'batches', 'messages', 'alerts', 'evidence',
   'complaints', 'certificates', 'chats', 'outbox', 'staff', 'i18n',
-  'aiLog', 'meta', 'leaks', 'chatsIndex', 'activity'
+  'aiLog', 'meta', 'leaks', 'chatsIndex', 'activity', 'inquiries', 'regaudit'
 ];
 // Short-lived collections that don't need to survive a restart
 const VOLATILE = new Set(['challenges']);

@@ -51,6 +51,13 @@ const SettingsPage = page(() => import('@/pages/settings/SettingsPage'));
 
 // Regulator console
 const RegulatorDashboardPage = page(() => import('@/pages/regulator/dashboard/RegulatorDashboardPage'));
+const RegulatorComplaintsPage = page(() => import('@/pages/regulator/complaints/ComplaintsPage'));
+const RegulatorComplaintCase = page(() => import('@/pages/regulator/case/ComplaintCasePage'));
+const RegulatorInquiryCase = page(() => import('@/pages/regulator/case/InquiryCasePage'));
+const RegulatorCompaniesPage = page(() => import('@/pages/regulator/companies/CompaniesPage'));
+const RegulatorCompanyPage = page(() => import('@/pages/regulator/companies/CompanyPage'));
+const RegulatorNoticesPage = page(() => import('@/pages/regulator/notices/NoticesPage'));
+const RegulatorActivityPage = page(() => import('@/pages/regulator/activity/RegulatorActivityPage'));
 
 export const NotFoundPage = page(() => import('@/pages/not-found/NotFoundPage'));
 
@@ -98,5 +105,15 @@ export const ROUTES: [string, RouteComponent][] = [
   ['/app/activity', U(ActivityPage)],
   ['/app/settings', U(SettingsPage)],
 
-  ['/regulator', requireRegulator(RegulatorDashboardPage)]
+  ['/regulator', requireRegulator(RegulatorDashboardPage)],
+  ['/regulator/complaints', requireRegulator(RegulatorComplaintsPage)],
+  ['/regulator/complaints/:id', requireRegulator(RegulatorComplaintCase)],
+  ['/regulator/inquiries/:id', requireRegulator(RegulatorInquiryCase)],
+  ['/regulator/companies', requireRegulator(RegulatorCompaniesPage)],
+  ['/regulator/companies/:key', requireRegulator(RegulatorCompanyPage)],
+  ['/regulator/notices', requireRegulator(RegulatorNoticesPage)],
+  ['/regulator/activity', requireRegulator(RegulatorActivityPage)],
+  ['/regulator/scores', requireRegulator(ScoresPage)],
+  ['/regulator/verify', requireRegulator(VerifyReceiptPage)],
+  ['/regulator/verify/:id', requireRegulator(VerifyReceiptPage)]
 ];

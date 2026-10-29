@@ -4,6 +4,7 @@ import { config } from '../config.js';
 import { generate, withFallback } from '../ai/gemini.js';
 import { isResolved } from './requests.js';
 import { publicCompany, companyByKey } from './companies.js';
+import { listComplaints, workload, companyKey } from './regulator.js';
 
 // Illustrative baseline used only while real data is thin (marked "sample" in the UI).
 const SAMPLE = {
@@ -69,7 +70,7 @@ export async function regulatorView() {
   const ignored = new Map();
   for (const t of db.filter('targets', x => x.status === 'overdue')) { const n = db.get('companies', t.companyId)?.name; ignored.set(n, (ignored.get(n) || 0) + 1); }
   const offenders = [...new Set([...byParty.keys(), ...leakSources.keys(), ...ignored.keys()])].map(name => ({
-    name, complaints: byParty.get(name) || 0, leaks: leakSources.get(name)?.leaks || 0, ignored: ignored.get(name) || 0
+    name, key: companyKey(name), complaints: byParty.get(name) || 0, leaks: leakSources.get(name)?.leaks || 0, ignored: ignored.get(name) || 0
   })).sort((a, b) => (b.complaints + b.leaks + b.ignored) - (a.complaints + a.leaks + a.ignored));
 
   const top = offenders[0];
@@ -88,7 +89,8 @@ Return JSON {"headline":"max 14 words","explanation":"max 60 words","priority":"
 
   return {
     kpis: { complaints: complaints.length, withEvidence: complaints.filter(c => c.packId).length, companies: byParty.size, leaks: db.all('leaks').length },
-    complaints: complaints.map(c => ({ id: c.id, reference: c.reference, against: c.parties.map(p => p.name), issue: c.parties.map(p => p.issue).join('; '), evidence: (db.get('evidence', c.packId)?.items || []).length, filedAt: c.filedAt })).reverse(),
-    offenders, pattern
+    complaints: listComplaints(),
+    workload: workload(),
+    offenders, pattern: pattern && { ...pattern, key: top.key }
   };
 }

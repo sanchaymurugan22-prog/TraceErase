@@ -89,7 +89,7 @@ export interface EvidencePack { id: string; number: string; title: string; targe
 export interface Complaint {
   id: string; userId: string; packId: string; status: 'draft' | 'filed'; to: string; summary: string; asks: string[];
   parties: { companyId: string | null; name: string; issue: string }[]; reference?: string; filedAt?: string; autoFiled?: boolean; ai?: boolean;
-  createdAt?: string; pack?: EvidencePack | null;
+  createdAt?: string; pack?: EvidencePack | null; board?: any;
 }
 
 export interface CertificateRow { company: string; status: string; kept: string; receiptId: string | null; hash: string | null }
@@ -113,9 +113,10 @@ export interface ChatSummary { id: string; title: string; at: string }
 
 export interface RegulatorOverview {
   kpis: { complaints: number; withEvidence: number; companies: number; leaks: number };
-  complaints: { id: string; reference: string; against: string[]; issue: string; evidence: number; filedAt: string }[];
-  offenders: { name: string; complaints: number; leaks: number; ignored: number }[];
-  pattern: { headline: string; explanation: string; priority: string; action?: string; _ai?: boolean } | null;
+  complaints: any[];
+  workload: { awaiting: number; inReview: number; decided: number; noticesOpen: number; noticesOverdue: number; inquiries: number; penaltiesCrore: number };
+  offenders: { name: string; key: string; complaints: number; leaks: number; ignored: number }[];
+  pattern: { headline: string; explanation: string; priority: string; action?: string; key?: string; _ai?: boolean } | null;
 }
 
 export interface SetupStatus {

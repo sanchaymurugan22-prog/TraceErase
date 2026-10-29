@@ -17,6 +17,7 @@ import * as views from './services/views.js';
 import * as reqs from './services/requests.js';
 import * as evidence from './services/evidence.js';
 import * as complaints from './services/complaints.js';
+import * as reg from './services/regulator.js';
 import * as inbound from './services/inbound.js';
 import * as assistant from './services/assistant.js';
 import * as stats from './services/stats.js';
@@ -121,6 +122,25 @@ export function registerRoutes(app) {
   app.post('/api/auth/staff/login', (req, res) => staff.login(res, req.body));
   app.post('/api/auth/staff/logout', (req, res) => { staff.logout(res); return { ok: true }; });
   app.get('/api/regulator/overview', (req) => { staff.requireRegulator(req); return stats.regulatorView(); });
+  const R = (fn) => (req) => { staff.requireRegulator(req); return fn(req, req.staff); };
+  const KIND = (k) => { if (k !== 'complaint' && k !== 'inquiry') throw notFound('Not found'); return k; };
+  app.get('/api/regulator/complaints', R(() => reg.listComplaints()));
+  app.get('/api/regulator/complaints/:id', R((req) => reg.complaintDetail(req.params.id)));
+  app.get('/api/regulator/companies', R(() => reg.listCompanies()));
+  app.get('/api/regulator/companies/:key', R((req) => reg.companyDetail(req.params.key)));
+  app.post('/api/regulator/companies/:key/inquiry', R((req, s) => reg.openInquiry(s, req.params.key, req.body || {})));
+  app.get('/api/regulator/inquiries', R(() => reg.listInquiries()));
+  app.get('/api/regulator/inquiries/:id', R((req) => reg.inquiryDetail(req.params.id)));
+  app.get('/api/regulator/notices', R(() => reg.listNotices()));
+  app.get('/api/regulator/audit', R(() => reg.auditLog()));
+  app.get('/api/regulator/scores', R(() => stats.companyScores()));
+  app.post('/api/regulator/:kind/:id/status', R((req, s) => reg.setStatus(s, KIND(req.params.kind), req.params.id, req.body || {})));
+  app.post('/api/regulator/:kind/:id/notes', R((req, s) => reg.addNote(s, KIND(req.params.kind), req.params.id, req.body || {})));
+  app.post('/api/regulator/:kind/:id/assess', R((req, s) => reg.assess(s, KIND(req.params.kind), req.params.id)));
+  app.post('/api/regulator/:kind/:id/notice/draft', R((req, s) => reg.draftNotice(s, KIND(req.params.kind), req.params.id, req.body || {})));
+  app.post('/api/regulator/:kind/:id/notice', R((req, s) => reg.sendNotice(s, KIND(req.params.kind), req.params.id, req.body || {})));
+  app.post('/api/regulator/:kind/:id/notices/:nid/reply', R((req, s) => reg.recordReply(s, KIND(req.params.kind), req.params.id, req.params.nid, req.body || {})));
+  app.post('/api/regulator/:kind/:id/decision', R((req, s) => reg.decide(s, KIND(req.params.kind), req.params.id, req.body || {})));
   app.post('/api/auth/passkey/register/options', (req) => { auth.requireUser(req); return wa.registrationOptions(req.user); });
   app.post('/api/auth/passkey/register/verify', (req) => {
     auth.requireUser(req);
@@ -328,7 +348,17 @@ export function registerRoutes(app) {
     U(req);
     const c = db.get('complaints', req.params.id);
     if (!c || c.userId !== req.user.id) throw notFound();
-    return { ...c, pack: db.get('evidence', c.packId) };
+    const { case: cs, ...rest } = c;
+    const q = c.inquiryId && db.get('inquiries', c.inquiryId);
+    // What the Board has done (without officers' internal notes)
+    const board = cs || q ? {
+      status: cs?.status || 'new', takenAt: cs?.takenAt || null,
+      history: (cs?.history || []).map(h => ({ at: h.at, text: h.text, receiptId: h.receiptId })),
+      notices: (cs?.notices || []).map(n => ({ company: n.company, sentAt: n.sentAt, dueAt: n.dueAt, replied: !!n.reply, complies: n.reply?.complies ?? null })),
+      decision: cs?.decision ? { label: cs.decision.label, order: cs.decision.order, directions: cs.decision.directions, penaltyCrore: cs.decision.penaltyCrore, complyBy: cs.decision.complyBy, at: cs.decision.at, receiptId: cs.decision.receiptId } : null,
+      inquiry: q ? { reference: q.reference, company: q.company } : null
+    } : null;
+    return { ...rest, pack: db.get('evidence', c.packId), board };
   });
   app.patch('/api/complaints/:id', (req) => {
     U(req);

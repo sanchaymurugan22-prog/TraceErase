@@ -4,7 +4,7 @@ import { Link } from '@/lib/router';
 import { useT } from '@/i18n/I18nProvider';
 import { useApi } from '@/hooks/useApi';
 import { openApiPage, patch, post } from '@/lib/api';
-import { fmtDateTime } from '@/lib/format';
+import { fmtDate, fmtDateTime } from '@/lib/format';
 import { AppShell } from '@/components/layout/AppShell';
 import { ActionButton, AiTag, Banner, Card, Check, Chip, CompanyAvatar, ErrorBox, Icon, Input, PageLoading, Textarea, Tile, Timeline, buttonClass, useToast } from '@/components/ui';
 import type { Complaint } from '@/types/api';
@@ -107,7 +107,24 @@ export default function ComplaintPage({ params }: { params: Record<string, strin
           )}
         </Card>
 
-        <Card>
+        {c.board ? (
+          <Card>
+            <h2 className="text-lg font-bold">{t('What the Board has done')}</h2>
+            {c.board.inquiry && <Banner tone="info" icon="layers">{t('Part of inquiry {ref} into {company}, together with other complaints.', { ref: c.board.inquiry.reference, company: c.board.inquiry.company })}</Banner>}
+            {c.board.decision && (
+              <div className="flex flex-col gap-1.5 rounded-2xl bg-ok-s p-4 text-sm">
+                <b className="text-ok">{t(c.board.decision.label)}{c.board.decision.penaltyCrore ? ` · ₹${c.board.decision.penaltyCrore} ${t('crore')}` : ''}</b>
+                <span className="text-ink2">{c.board.decision.directions}</span>
+                {c.board.decision.complyBy && <span className="text-mute">{t('Must comply by {date}', { date: fmtDate(c.board.decision.complyBy) })} · <span translate="no">{c.board.decision.order}</span></span>}
+              </div>
+            )}
+            <Timeline items={[
+              { icon: 'scale' as const, state: 'done' as const, title: <span className="text-sm font-semibold">{t('Complaint filed')}</span>, sub: <span className="text-[13px] text-mute">{fmtDateTime(c.filedAt)}</span> },
+              ...c.board.history.map((h: any) => ({ icon: 'check' as const, state: 'done' as const, title: <span className="text-sm font-semibold">{t(h.text)}</span>, sub: <span className="text-[13px] text-mute">{fmtDateTime(h.at)}</span> })),
+              ...(!c.board.decision && c.board.status !== 'dismissed' ? [{ icon: 'clock' as const, state: 'current' as const, title: <span className="text-sm font-semibold">{t(c.board.notices.some((n: any) => !n.replied) ? 'Waiting for the company to answer the Board' : 'The Board is reviewing your evidence')}</span> }] : [])
+            ]} />
+          </Card>
+        ) : <Card>
           <h2 className="text-lg font-bold">{t('What happens next')}</h2>
           <Timeline items={NEXT.map(([h, s], i) => ({
             icon: filed && i === 0 ? 'check' : i === 0 ? 'send' : i === 1 ? 'search' : i === 2 ? 'scale' : 'bell',
@@ -115,7 +132,7 @@ export default function ComplaintPage({ params }: { params: Record<string, strin
             title: <span className="text-sm font-semibold">{t(h)}</span>,
             sub: <span className="text-[13px] text-mute">{t(s)}</span>
           }))} />
-        </Card>
+        </Card>}
       </div>
     </AppShell>
   );
