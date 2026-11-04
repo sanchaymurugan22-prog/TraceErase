@@ -13,3 +13,6 @@ logs/
 *service-account*.json
 *firebase-adminsdk*.json
 .firebase/
+
+# Test wallet for public blockchain anchoring (never commit)
+*.secret.txt

@@ -26,7 +26,9 @@ import * as demo from './services/demo.js';
 import * as docs from './services/docs.js';
 import { translate } from './services/i18n.js';
 import { getPolicy } from './services/policy.js';
-import { verifyReceipt, addReceipt, publicReceipt, runBatch } from './services/ledger.js';
+import { verifyReceipt, addReceipt, publicReceipt, runBatch, verifyBatchOnChain, chainEnabled } from './services/ledger.js';
+import { publicKeyInfo } from './util/signing.js';
+import * as nominee from './services/nominee.js';
 import { escalate } from './services/requests.js';
 import { getOrCreateCompany, upsertHolding, ensureAddress, rotateAddress, allowSender, publicCompany, addressFor, domainOf, rootDomain } from './services/companies.js';
 import { findInCatalog } from './services/catalog.js';
@@ -70,6 +72,9 @@ export function registerRoutes(app) {
     if (onboarding) patch.onboarding = { ...(req.user.onboarding || {}), ...onboarding };
     return { user: auth.publicUser(db.update('users', req.user.id, patch)) };
   });
+  // Nominee (Section 14, DPDP Act)
+  app.put('/api/me/nominee', (req) => { U(req); return nominee.setNominee(req.user, req.body || {}); });
+  app.delete('/api/me/nominee', (req) => { U(req); return nominee.removeNominee(req.user); });
   app.get('/api/me/export', (req, res) => {
     U(req);
     const id = req.user.id;
@@ -306,7 +311,13 @@ export function registerRoutes(app) {
   app.post('/api/targets/:id/send', (req) => { U(req); return reqs.sendHeldLetter(req.user, req.params.id, req.body.to); });
   app.post('/api/targets/:id/webform-done', (req) => { U(req); return reqs.markWebformSubmitted(req.user, req.params.id, req.body.reference); });
   app.post('/api/requests/:id/certificate', (req) => { U(req); return reqs.issueCertificate(req.user, req.params.id); });
-  app.get('/api/certificates/:id', (req) => { U(req); const c = db.get('certificates', req.params.id); if (!c || c.userId !== req.user.id) throw notFound(); return { ...c, receipt: publicReceipt(db.get('receipts', c.receiptId)), request: db.get('requests', c.requestId)?.number }; });
+  app.get('/api/certificates/:id', (req) => {
+    U(req);
+    const c = db.get('certificates', req.params.id);
+    if (!c || c.userId !== req.user.id) throw notFound();
+    const v = verifyReceipt(c.receiptId);
+    return { ...c, receipt: publicReceipt(db.get('receipts', c.receiptId)), request: db.get('requests', c.requestId)?.number, signatureOk: v.signatureOk ?? null, signer: v.signer || null, nominee: nominee.publicNominee(req.user.nominee) };
+  });
 
   // ---------- alerts, leaks, evidence, complaints ----------
   app.get('/api/alerts', (req) => { U(req); return db.filter('alerts', a => a.userId === req.user.id).reverse(); });
@@ -381,6 +392,15 @@ export function registerRoutes(app) {
     const subject = r.data?.partnerCompanyId || r.companyId;
     const evidenceTargetId = subject ? db.filter('targets', x => x.userId === req.user.id && x.companyId === subject).at(-1)?.id || null : null;
     return { ...r, company: publicCompany(db.get('companies', r.companyId)), partner: r.data?.partnerCompanyId ? publicCompany(db.get('companies', r.data.partnerCompanyId)) : null, verification: verifyReceipt(r.id), evidenceTargetId };
+  });
+  // TraceErase's public signing key: anyone can check receipt signatures with it
+  app.get('/api/public-key', () => ({ ...publicKeyInfo(), publicChain: chainEnabled() ? { network: config.chain.network, explorer: config.chain.explorer } : null }));
+  // Ask the public blockchain itself whether it holds this receipt's seal
+  app.get('/api/verify/:id/chain', async (req) => {
+    const v = verifyReceipt(req.params.id);
+    if (!v.found) throw notFound('No receipt with this ID');
+    if (!v.batch) return { checked: false, onChain: false, error: 'Not sealed yet' };
+    return verifyBatchOnChain(v.batch.id);
   });
   app.get('/api/verify/:id', (req) => {
     const v = verifyReceipt(req.params.id);

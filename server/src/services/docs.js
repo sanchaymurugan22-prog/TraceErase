@@ -51,7 +51,9 @@ export async function certificateHtml(user, id) {
 <p class="mute" style="max-width:560px;margin:0 auto">This certifies the outcome of deletion request ${esc(req?.number)}, signed by ${esc(user.name)} on ${date(req?.signedAt)}, under the Digital Personal Data Protection Act, 2023.</p></div>
 <table><thead><tr><th>Company</th><th>Result</th><th>Kept, and why</th><th>Proof</th></tr></thead><tbody>${rows}</tbody></table>
 <div class="foot"><div style="display:flex;gap:16px;align-items:center">${await qrSvg(verifyUrl)}<div><b>Scan or visit to verify</b><div class="mono mute">${esc(verifyUrl)}</div><div class="mute" style="font-size:13px">Checks every receipt against the ledger. Any change breaks the check.</div></div></div>
-<div style="text-align:right" class="mute"><div style="font-size:12px">Fingerprint</div><div class="mono">${esc(short(receipt?.hash))}</div></div></div>`);
+<div style="text-align:right" class="mute"><div style="font-size:12px">Fingerprint</div><div class="mono">${esc(short(receipt?.hash))}</div></div></div>
+${receipt?.signature ? `<p class="mute" style="font-size:12.5px;margin-top:18px"><b style="color:#2F6E4F">Digitally signed by TraceErase</b> · Ed25519 · key ${esc(receipt.signer || '')} · signature <span class="mono">${esc(String(receipt.signature).slice(0, 24))}…</span>. Check it with the public key at ${esc(config.apiUrl)}/api/public-key.</p>` : ''}
+${user.nominee ? `<p class="mute" style="font-size:12.5px">Nominee under Section 14 of the DPDP Act: <b>${esc(user.nominee.name)}</b> (${esc(user.nominee.relation)}).</p>` : ''}`);
 }
 
 export function complaintHtml(user, id) {

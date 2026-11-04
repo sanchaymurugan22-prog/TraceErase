@@ -4,9 +4,10 @@ import { useNavigate, useRouter } from '@/lib/router';
 import { RegulatorShell } from '@/components/layout/RegulatorShell';
 import { useT } from '@/i18n/I18nProvider';
 import { useApi } from '@/hooks/useApi';
+import { apiUrl } from '@/lib/api';
 import { fmtDateTime, shortHash } from '@/lib/format';
 import { PublicNav } from '@/components/layout/PublicNav';
-import { Banner, Button, Card, ErrorBox, Icon, Input, KeyValue, Spinner } from '@/components/ui';
+import { Banner, Button, Card, ErrorBox, Icon, Input, KeyValue, Spinner, buttonClass } from '@/components/ui';
 
 export default function VerifyReceiptPage({ params }: { params: Record<string, string> }) {
   const t = useT();
@@ -16,6 +17,8 @@ export default function VerifyReceiptPage({ params }: { params: Record<string, s
   const base = inConsole ? '/regulator/verify/' : '/verify/';
   const [id, setId] = useState(params.id || '');
   const { data, error, loading } = useApi<any>(params.id ? '/verify/' + params.id : null);
+  // Ask the public blockchain itself (only when this seal was published there)
+  const { data: chain, loading: chainLoading } = useApi<any>(params.id && data?.batch?.txHash ? '/verify/' + params.id + '/chain' : null);
 
   const body = (
       <div className={inConsole ? 'flex max-w-[820px] flex-col gap-5' : 'mx-auto flex max-w-[760px] flex-col gap-5 px-6 py-10'}>
@@ -42,8 +45,26 @@ export default function VerifyReceiptPage({ params }: { params: Record<string, s
               <KeyValue label={t('Sealed in')}>{t('Seal #{n} ({m} records in this seal)', { n: data.batch.number, m: data.batch.size })}</KeyValue>
               <KeyValue label={t('Code of the seal')}><span className="font-mono text-xs" translate="no">{shortHash(data.batch.root, 12, 8)}</span></KeyValue>
               <KeyValue label={t('Kept in')}>{t(String(data.batch.network).replace('TraceErase local ledger', 'TraceErase tamper-proof log'))}{data.batch.txHash ? ` · tx ${shortHash(data.batch.txHash)}` : ''}</KeyValue>
-              <KeyValue label={t('Checks')}>{t('Not changed')} {data.intact ? '✓' : '✗'} · {t('Inside its seal')} {data.inBatch ? '✓' : '✗'} · {t('Seals unbroken')} {data.chainOk ? '✓' : '✗'}</KeyValue>
+              <KeyValue label={t('Checks')}>{t('Not changed')} {data.intact ? '✓' : '✗'} · {t('Inside its seal')} {data.inBatch ? '✓' : '✗'} · {t('Seals unbroken')} {data.chainOk ? '✓' : '✗'}{data.signed ? <> · {t('Signature')} {data.signatureOk ? '✓' : '✗'}</> : null}</KeyValue>
             </>}
+            {data.signed && (
+              <KeyValue label={t('Digital signature')}>
+                <span className={data.signatureOk ? 'font-semibold text-ok' : 'font-semibold text-leak'}>{data.signatureOk ? '✓ ' + t('Signed by TraceErase') : '✗ ' + t('Signature does not match: not issued by TraceErase, or changed')}</span>
+                <span className="block text-[13px] text-mute">Ed25519 · {t('key')} <span className="font-mono" translate="no">{data.signer}</span> · <a href={apiUrl('/api/public-key')} target="_blank" rel="noopener noreferrer">{t('public key')}</a></span>
+              </KeyValue>
+            )}
+            {data.batch?.txHash && (
+              <div className="flex flex-col gap-2.5 rounded-xl border border-accent/25 bg-accent-s p-4">
+                <span className="flex items-center gap-2 font-semibold text-ink"><Icon name="cube" size="sm" className="text-accent" />{t('Published on a public blockchain')}</span>
+                <span className="text-sm text-ink2">
+                  {chainLoading ? t('Asking the blockchain…')
+                    : chain?.onChain ? '✓ ' + t('{network} confirms this seal. Not even TraceErase can change it now.', { network: data.batch.network })
+                    : chain?.checked ? '✗ ' + t('The blockchain record does not match this seal.')
+                    : t('Waiting for the blockchain to confirm. This usually takes under a minute.')}
+                </span>
+                {data.batch.explorerUrl && <a href={data.batch.explorerUrl} target="_blank" rel="noopener noreferrer" className={buttonClass('secondary', 'sm') + ' self-start'}><Icon name="ext" size="sm" />{t('View on PolygonScan')}</a>}
+              </div>
+            )}
           </Card>
         )}
         <Card className="gap-3">
@@ -51,6 +72,8 @@ export default function VerifyReceiptPage({ params }: { params: Record<string, s
           {[
             ['hash', 'When something happens (you sign a request, a company replies), TraceErase turns that record into a unique code, like a fingerprint. Change even one letter of the record and the code changes completely.'],
             ['cube', 'Every minute, new codes are sealed together, and each seal also includes the seal before it. So an old record cannot be quietly changed later without breaking every seal after it.'],
+            ['key', 'TraceErase also signs every code with its own digital signature. Anyone can check it with TraceErase\'s public key, so a fake or edited receipt is caught at once.'],
+            ['link', 'When public publishing is switched on, each seal is also written on the Polygon blockchain, which thousands of computers keep. Then nobody, not even TraceErase, can quietly rewrite the history.'],
             ['shieldc', 'This page recalculates the code and checks the seals. If everything matches, the record is genuine. Only the code is stored in the seal, never your personal details.']
           ].map(([ic, txt], i) => (
             <div key={i} className="flex items-start gap-3 text-sm text-ink2"><span className="inline-flex size-8 flex-none items-center justify-center rounded-lg bg-accent-s text-accent"><Icon name={ic as any} size="sm" /></span><span>{t(txt)}</span></div>

@@ -10,7 +10,10 @@ export interface User {
   id: string; name: string; email: string; phone: string; language: string; letterLanguage?: string;
   protectedNumber?: string; verified: boolean; verifiedEmail: boolean; verifiedPhone: boolean; demo?: boolean; authProvider?: string;
   hasPasskey: boolean; onboarding: Record<string, any>; settings: Settings; gmailConnected: boolean; createdAt: string;
+  nominee?: Nominee | null;
 }
+
+export interface Nominee { name: string; relation: string; contact: string; contactMasked?: string; addedAt: string; receiptId: string | null }
 
 export interface Staff { id: string; email: string; name: string; role: 'regulator'; org: string }
 
@@ -69,7 +72,7 @@ export interface Alert {
 
 export interface Receipt {
   id: string; kind: string; title: string; hash: string; issuedAt: string; signedBy?: string; data?: any;
-  batchId?: string | null; company?: any;
+  batchId?: string | null; company?: any; signature?: string | null; signer?: string | null;
 }
 
 export interface LeakChainNode { name: string; note?: string; companyId?: string; leak?: boolean }
@@ -96,6 +99,7 @@ export interface CertificateRow { company: string; status: string; kept: string;
 export interface Certificate {
   id: string; requestId: string; number: string; rows: CertificateRow[]; resolvedCount: number; total: number; issuedAt: string;
   receiptId: string; receipt?: Receipt | null; request?: string;
+  signatureOk?: boolean | null; signer?: string | null; nominee?: Nominee | null;
 }
 
 export interface ActivityItem {

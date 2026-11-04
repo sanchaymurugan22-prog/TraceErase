@@ -83,6 +83,7 @@ export const get = <T = any>(p: string) => api<T>(p);
 export const post = <T = any>(p: string, body?: unknown) => api<T>(p, { method: 'POST', body: body ?? {} });
 export const patch = <T = any>(p: string, body?: unknown) => api<T>(p, { method: 'PATCH', body });
 export const del = <T = any>(p: string) => api<T>(p, { method: 'DELETE' });
+export const put = <T = any>(p: string, body?: unknown) => api<T>(p, { method: 'PUT', body: body ?? {} });
 
 /** Opens a printable page from the API (certificate, complaint, evidence) in a new tab. */
 export async function openApiPage(path: string) {

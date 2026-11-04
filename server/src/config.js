@@ -29,6 +29,8 @@ function build() { return {
   firebase: { projectId: env('FIREBASE_PROJECT_ID'), apiKey: env('FIREBASE_WEB_API_KEY') },
   apiUrl: env('API_URL', 'http://localhost:4000'),
   jwtSecret: env('JWT_SECRET', 'change-me-in-production-' + SERVER_ROOT),
+  // Ed25519 key that signs every receipt (64 hex characters). Optional: derived from JWT_SECRET when missing.
+  signingSeed: env('TRACE_SIGNING_SEED'),
   dataDir: path.resolve(SERVER_ROOT, env('DATA_DIR', 'data')),
   protectedDomain: env('PROTECTED_EMAIL_DOMAIN', 'te.mail'),
   protectedNumberPrefix: env('PROTECTED_NUMBER_PREFIX', '+91 70000'),
@@ -73,12 +75,16 @@ function build() { return {
     clientSecret: env('GOOGLE_CLIENT_SECRET'),
     redirectUri: env('GOOGLE_REDIRECT_URI', 'http://localhost:4000/api/gmail/callback')
   },
-  // Blockchain anchoring (optional; without it roots are anchored in the local hash-chained ledger)
+  // Public blockchain anchoring (optional; without it roots stay in the local hash-chained ledger).
+  // Only ANCHOR_PRIVATE_KEY is required: a test-only Polygon Amoy wallet with free test POL.
+  // With ANCHOR_CONTRACT set, roots go to the TraceAnchor contract; otherwise each root is written into a
+  // zero-value transaction the wallet sends to itself (no contract needed, still public and permanent).
   chain: {
-    rpcUrl: env('ANCHOR_RPC_URL'),
+    rpcUrl: env('ANCHOR_RPC_URL') || (env('ANCHOR_PRIVATE_KEY') ? 'https://rpc-amoy.polygon.technology' : ''),
     privateKey: env('ANCHOR_PRIVATE_KEY'),
     contract: env('ANCHOR_CONTRACT'),
-    network: env('ANCHOR_NETWORK_NAME', 'Polygon Amoy')
+    network: env('ANCHOR_NETWORK_NAME', 'Polygon Amoy'),
+    explorer: env('ANCHOR_EXPLORER_URL', 'https://amoy.polygonscan.com').replace(/\/$/, '')
   },
   batchIntervalSec: num('LEDGER_BATCH_SECONDS', 60),
   escalation: { reminderDay: 7, grievanceDay: 10, complaintDay: 15, legalDeadlineDay: 30 },

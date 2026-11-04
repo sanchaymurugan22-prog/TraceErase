@@ -11,6 +11,7 @@ import { AiSection } from './sections/AiSection';
 import { GmailSection } from './sections/GmailSection';
 import { DisplaySection } from './sections/DisplaySection';
 import { SecuritySection } from './sections/SecuritySection';
+import { NomineeSection } from './sections/NomineeSection';
 import { DataSection } from './sections/DataSection';
 import { API_URL } from '@/lib/config';
 
@@ -22,6 +23,7 @@ const SECTIONS: [string, IconName, string][] = [
   ['gmail', 'mail', 'Gmail scanning'],
   ['display', 'globe', 'Language and display'],
   ['security', 'key', 'Security'],
+  ['nominee', 'users', 'Nominee'],
   ['data', 'trash', 'Your TraceErase data']
 ];
 
@@ -53,6 +55,7 @@ export default function SettingsPage() {
           {!online && <GmailSection />}
           <DisplaySection />
           <SecuritySection />
+          <NomineeSection />
           <DataSection />
         </div>
       </div>

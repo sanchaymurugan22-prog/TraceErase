@@ -39,7 +39,8 @@ export const publicUser = (u) => u && ({
   authProvider: u.authProvider || (u.firebaseUid ? 'password' : 'code'),
   hasPasskey: db.filter('passkeys', p => p.userId === u.id).length > 0,
   onboarding: u.onboarding || {}, settings: { ...DEFAULT_SETTINGS, ...(u.settings || {}) },
-  gmailConnected: !!u.gmail?.refreshToken, createdAt: u.createdAt
+  gmailConnected: !!u.gmail?.refreshToken, createdAt: u.createdAt,
+  nominee: u.nominee ? { name: u.nominee.name, relation: u.nominee.relation, contact: u.nominee.contact, addedAt: u.nominee.addedAt, receiptId: u.nominee.receiptId || null } : null
 });
 
 function issueCode(user, channel, purpose) {

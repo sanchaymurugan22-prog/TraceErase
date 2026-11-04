@@ -74,6 +74,26 @@ export default function CertificatePage({ params }: { params: Record<string, str
               <code className="rounded-md bg-[#EEF2F9] px-2 py-1 font-mono text-[12.5px] text-[#2B3954]">{shortHash(c.receipt?.hash, 10, 6)}</code>
             </span>
           </div>
+
+          {(c.receipt?.signature || c.nominee) && (
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-md bg-[#F3F6F1] px-4 py-3">
+              {c.receipt?.signature && (
+                <span className="flex items-center gap-3">
+                  <span className={'inline-flex size-9 flex-none items-center justify-center rounded-full ' + (c.signatureOk === false ? 'bg-[#F6E3DE] text-[#A63D2F]' : 'bg-[#E2EEE5] text-[#2F6E4F]')}><Icon name={c.signatureOk === false ? 'alert' : 'key'} size="sm" /></span>
+                  <span className="flex flex-col">
+                    <span className={'text-sm font-bold ' + (c.signatureOk === false ? 'text-[#A63D2F]' : 'text-[#2F6E4F]')}>{c.signatureOk === false ? t('Signature does not match') : t('Digitally signed by TraceErase')}</span>
+                    <span className="text-[12.5px] text-[#56627A]">Ed25519 · {t('key')} <span className="font-mono" translate="no">{c.signer || c.receipt.signer}</span> · <span className="font-mono" translate="no">{String(c.receipt.signature).slice(0, 18)}…</span></span>
+                  </span>
+                </span>
+              )}
+              {c.nominee && (
+                <span className="flex flex-col text-right">
+                  <span className="text-[12.5px] text-[#56627A]">{t('Nominee (Section 14, DPDP Act)')}</span>
+                  <span className="text-sm font-bold" translate="no">{c.nominee.name} <span className="font-normal text-[#56627A]">· {t(c.nominee.relation)}</span></span>
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </article>
     </AppShell>

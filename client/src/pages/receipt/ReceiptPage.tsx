@@ -18,9 +18,13 @@ export default function ReceiptPage({ params }: { params: Record<string, string>
   const v = r.verification;
   const d = r.data || {};
   const share = r.kind === 'share';
-  const proof: [string, string][] = [['Unique code of this record', r.hash], ...(v.batch
-    ? [['Sealed in', t('Seal #{n} ({m} records in this seal)', { n: v.batch.number, m: v.batch.size })], ['Sealed on', fmtDateTime(v.batch.anchoredAt)], ['Code of the seal', v.batch.root], ...(v.batch.txHash ? [['Blockchain transaction', v.batch.txHash]] : [])] as [string, string][]
-    : [['Status', t('Will be sealed within a minute')]] as [string, string][])];
+  const proof: [string, string][] = [
+    ['Unique code of this record', r.hash],
+    ...(v.batch
+      ? [['Sealed in', t('Seal #{n} ({m} records in this seal)', { n: v.batch.number, m: v.batch.size })], ['Sealed on', fmtDateTime(v.batch.anchoredAt)], ['Code of the seal', v.batch.root], ...(v.batch.txHash ? [['Blockchain transaction', v.batch.txHash]] : [])] as [string, string][]
+      : [['Status', t('Will be sealed within a minute')]] as [string, string][]),
+    ...(v.signed ? [['Digital signature', `${v.signatureOk ? '✓ ' + t('Signed by TraceErase') : '✗ ' + t('Signature does not match')} · Ed25519 · ${v.signer || ''}`]] as [string, string][] : [])
+  ];
 
   return (
     <AppShell active="/app/evidence">
@@ -68,7 +72,8 @@ export default function ReceiptPage({ params }: { params: Record<string, string>
                 {String(val).startsWith('0x') ? <span className="break-all rounded-lg bg-white/6 px-2 py-1 font-mono text-xs text-on" translate="no">{val}</span> : <span className="font-semibold text-white">{val}</span>}
               </div>
             ))}
-            {v.anchored && <span className="pt-2 text-[13px] text-accent-b">{t('Checks')}: {t('not changed')} {v.intact ? '✓' : '✗'} · {t('inside its seal')} {v.inBatch ? '✓' : '✗'} · {t('seals unbroken')} {v.chainOk ? '✓' : '✗'}</span>}
+            {v.anchored && <span className="pt-2 text-[13px] text-accent-b">{t('Checks')}: {t('not changed')} {v.intact ? '✓' : '✗'} · {t('inside its seal')} {v.inBatch ? '✓' : '✗'} · {t('seals unbroken')} {v.chainOk ? '✓' : '✗'}{v.signed ? <> · {t('signature')} {v.signatureOk ? '✓' : '✗'}</> : null}</span>}
+            {v.batch?.explorerUrl && <a href={v.batch.explorerUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-b hover:text-white"><Icon name="ext" size="sm" />{t('View on PolygonScan')}</a>}
           </DarkPanel>
           <Card>
             <h2 className="text-[17px] font-bold">{t('What this means')}</h2>
