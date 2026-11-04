@@ -202,7 +202,9 @@ export function ledgerSeals(limit = 25) {
   const seals = all.slice(-n).reverse().map(b => ({
     number: b.number, sealedAt: realTime(b), records: b.size, root: b.root, chainHash: b.chainHash,
     linked: linked.get(b.id), network: b.network, txHash: b.txHash || null, explorerUrl: explorerTx(b.txHash),
-    onChain: !!b.txHash, confirmed: !!b.onChainConfirmed, pending: !b.txHash && chainEnabled() && !b.anchorError
+    onChain: !!b.txHash, confirmed: !!b.onChainConfirmed,
+    // "Publishing…" only for a fresh seal; older seals without a transaction were made before publishing was on
+    pending: !b.txHash && chainEnabled() && !b.anchorError && Date.now() - new Date(realTime(b)).getTime() < 10 * 60000
   }));
   const last = all.at(-1);
   return {

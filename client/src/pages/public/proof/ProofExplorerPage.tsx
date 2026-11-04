@@ -124,6 +124,31 @@ export default function ProofExplorerPage() {
           </div>
         )}
 
+        {/* Plain-language guide for anyone landing here */}
+        <Card className="gap-4">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-xl font-bold">{t('How to read this page')}</h2>
+            <p className="text-sm text-mute">{t('When someone uses TraceErase, every important step is written down as proof, then locked so nobody can change it later.')}</p>
+          </div>
+          <div className="grid grid-cols-5 gap-3 max-[1100px]:grid-cols-2 max-[600px]:grid-cols-1">
+            {[
+              ['receipt', 'Record', 'One step written down as proof, like "a deletion request was signed" or "a company replied". Like a receipt from a shop.'],
+              ['lock', 'Seal', 'Every minute, the new records are packed together and locked. Like sealing letters in an envelope.'],
+              ['hash', 'Seal code', 'A unique code made from what is inside the seal. Change even one letter and the code changes completely.'],
+              ['link', 'Linked', 'Each seal also includes the code of the seal before it, like a chain. Changing an old record would break the chain.'],
+              ['cube', 'Blockchain', 'A copy of each seal code is published on Polygon, a public record kept by thousands of computers. Nobody can erase it.']
+            ].map(([ic, term, def]) => (
+              <div key={term} className="flex flex-col gap-1.5 rounded-xl bg-soft/70 p-3.5">
+                <span className="flex items-center gap-2 font-semibold text-ink"><span className="inline-flex size-7 items-center justify-center rounded-lg bg-accent-s text-accent"><Icon name={ic as any} size="sm" /></span>{t(term)}</span>
+                <span className="text-[13px] leading-5 text-ink2">{t(def)}</span>
+              </div>
+            ))}
+          </div>
+          <p className="rounded-xl border border-accent/20 bg-accent-s px-4 py-3 text-sm text-ink2">
+            <b className="text-ink">{t('Example: ')}</b>{t('"Seal #58 · 8:50 pm · 4 records · Linked ✓" means that at 8:50 pm, four proof records were locked together, the seal is chained to seal #57, and its code is on the public blockchain. What those records say stays private.')}
+          </p>
+        </Card>
+
         <div className="grid grid-cols-[minmax(0,1fr)_340px] gap-6 max-[1100px]:grid-cols-1">
           <Card className="gap-0 overflow-hidden p-0">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-6 py-4">
@@ -131,7 +156,7 @@ export default function ProofExplorerPage() {
               <span className="text-sm text-mute">{st ? t('A new seal every {n} seconds when there is activity', { n: st.intervalSec }) : ''}</span>
             </div>
             <div className="grid grid-cols-[90px_120px_110px_minmax(0,1fr)_120px_190px] gap-3 border-b border-line bg-soft/60 px-6 py-2.5 text-xs font-bold uppercase tracking-[.08em] text-mute max-[1000px]:hidden">
-              <span>{t('Seal')}</span><span>{t('Time')}</span><span>{t('Records')}</span><span>{t('Seal code')}</span><span>{t('Linked')}</span><span>{t('Blockchain')}</span>
+              <span title={t('A batch of records locked together')}>{t('Seal')}</span><span>{t('Time')}</span><span title={t('How many proofs are inside this seal')}>{t('Records')}</span><span title={t('A unique code for what is inside')}>{t('Seal code')}</span><span title={t('Chained to the seal before it')}>{t('Linked')}</span><span title={t('Published on the public Polygon blockchain')}>{t('Blockchain')}</span>
             </div>
             {data?.seals.length === 0 && <p className="px-6 py-10 text-center text-mute">{t('No seals yet. The first one appears a minute after someone uses TraceErase.')}</p>}
             {data?.seals.map(s => (
