@@ -25,12 +25,12 @@ export default function CertificatePage({ params }: { params: Record<string, str
       </div>
 
       {/* The certificate itself is always printed on white, like paper */}
-      <article className="mx-auto w-full max-w-[920px] rounded-lg border border-line2 bg-white p-3.5 text-[#0A1630] shadow-pop">
-        <div className="dots-light flex flex-col gap-7 rounded border-[1.5px] border-[#0A1630] px-12 py-11 max-[700px]:px-5 max-[700px]:py-7">
+      <article className="mx-auto w-full max-w-[920px] rounded-lg border border-line2 bg-white p-3.5 text-[#1E3F31] shadow-pop">
+        <div className="dots-light flex flex-col gap-7 rounded border-[1.5px] border-[#1E3F31] px-12 py-11 max-[700px]:px-5 max-[700px]:py-7">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <span className="flex items-center gap-2.5">
               <LogoMark size={40} dark={false} />
-              <span className="font-display text-xl font-extrabold tracking-tight" translate="no">Trace<span className="text-[#0B7A6E]">Erase</span></span>
+              <span className="font-display text-xl font-extrabold tracking-tight" translate="no">Trace<span className="text-[#3F7A62]">Erase</span></span>
             </span>
             <span className="flex flex-col text-right">
               <span className="font-mono text-sm font-bold">{t('No.')} {c.number}</span>
@@ -39,8 +39,8 @@ export default function CertificatePage({ params }: { params: Record<string, str
           </div>
 
           <div className="flex flex-col items-center gap-2 text-center">
-            <span className="text-xs font-bold uppercase tracking-[.12em] text-[#0B7A6E]">{t('Certificate of')}</span>
-            <h1 className="m-0 font-display text-[44px] font-extrabold leading-[52px] text-[#0A1630] max-[700px]:text-3xl">{t('Data Deletion')}</h1>
+            <span className="text-xs font-bold uppercase tracking-[.12em] text-[#3F7A62]">{t('Certificate of')}</span>
+            <h1 className="m-0 font-display text-[44px] font-extrabold leading-[52px] text-[#1E3F31] max-[700px]:text-3xl">{t('Data Deletion')}</h1>
             <p className="max-w-[560px] text-[#56627A]">{t('This certifies the outcome of deletion request {request} under the Digital Personal Data Protection Act, 2023. {done} of {total} companies have answered.', { request: c.request || '', done: c.resolvedCount, total: c.total })}</p>
           </div>
 

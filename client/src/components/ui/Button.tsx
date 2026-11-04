@@ -9,19 +9,19 @@ export type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'white' | '
 export type Size = 'sm' | 'md' | 'lg';
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'border-transparent bg-ocean text-white shadow-glow hover:-translate-y-px hover:brightness-110 hover:text-white active:translate-y-0',
+  primary: 'border-transparent bg-ocean text-[#F5F2EA] shadow-glow hover:-translate-y-px hover:brightness-125 hover:text-[#F5F2EA] active:translate-y-0',
   secondary: 'border-line bg-card/90 text-ink shadow-[0_1px_2px_rgba(15,50,80,.05)] backdrop-blur hover:border-line2 hover:bg-card hover:text-ink',
   ghost: 'border-transparent bg-transparent text-brand hover:bg-brand-s',
-  danger: 'border-transparent bg-[linear-gradient(120deg,#E5484D,#B42318)] text-white shadow-[0_10px_26px_-10px_rgba(180,35,24,.55)] hover:-translate-y-px hover:brightness-110 hover:text-white',
-  white: 'border-transparent bg-white text-navy shadow-[0_10px_30px_-10px_rgba(45,212,191,.55)] hover:-translate-y-px hover:bg-[#F0FBFA] hover:text-navy',
+  danger: 'border-transparent bg-leak text-white shadow-[0_12px_24px_-14px_rgba(166,61,47,.7)] hover:-translate-y-px hover:brightness-110 hover:text-white',
+  white: 'border-transparent bg-[#F5F2EA] text-navy shadow-[0_12px_26px_-14px_rgba(0,0,0,.45)] hover:-translate-y-px hover:bg-white hover:text-navy',
   outline: 'border-white/25 bg-white/5 text-white backdrop-blur hover:border-white/40 hover:bg-white/12 hover:text-white',
-  dark: 'border-transparent bg-[linear-gradient(120deg,#0C2036,#143152)] text-white shadow-[0_10px_26px_-12px_rgba(6,20,35,.6)] hover:-translate-y-px hover:brightness-125 hover:text-white',
-  accent: 'border-transparent bg-[linear-gradient(120deg,#14B8A6,#0C8577)] text-white shadow-[0_10px_26px_-10px_rgba(20,184,166,.55)] hover:-translate-y-px hover:brightness-110 hover:text-white'
+  dark: 'border-transparent bg-[#1B2620] text-[#F5F2EA] shadow-[0_12px_24px_-14px_rgba(27,38,32,.7)] hover:-translate-y-px hover:bg-[#2B3A32] hover:text-[#F5F2EA]',
+  accent: 'border-transparent bg-accent text-white shadow-[0_12px_24px_-14px_rgba(63,122,98,.7)] hover:-translate-y-px hover:brightness-110 hover:text-white'
 };
 const SIZES: Record<Size, string> = {
-  sm: 'h-9 px-3.5 text-sm rounded-full',
-  md: 'h-11 px-5 text-[15px] rounded-full',
-  lg: 'h-[52px] px-7 text-base rounded-full'
+  sm: 'h-9 px-3.5 text-sm rounded-[10px]',
+  md: 'h-11 px-5 text-[15px] rounded-xl',
+  lg: 'h-[52px] px-7 text-base rounded-[14px]'
 };
 
 export const buttonClass = (variant: Variant = 'primary', size: Size = 'md', full = false, className?: string) =>

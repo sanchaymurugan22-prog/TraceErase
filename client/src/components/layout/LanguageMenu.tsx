@@ -24,7 +24,7 @@ export function LanguageMenu({ dark, showLabel }: { dark?: boolean; showLabel?: 
         <Icon name="globe" />{showLabel && <span translate="no">{languageByCode(lang).native}</span>}
       </button>
       {open && (
-        <div role="menu" className="absolute right-0 top-12 z-50 grid w-64 animate-fade grid-cols-2 gap-1 rounded-[22px] border border-line/70 bg-card p-2 shadow-pop">
+        <div role="menu" className="absolute right-0 top-12 z-50 grid w-64 animate-fade grid-cols-2 gap-1 rounded-xl border border-line/70 bg-card p-2 shadow-pop">
           {LANGUAGES.map(l => (
             <button key={l.code} role="menuitemradio" aria-checked={l.code === lang} translate="no"
               onClick={() => { setLanguage(l.code); setOpen(false); }}

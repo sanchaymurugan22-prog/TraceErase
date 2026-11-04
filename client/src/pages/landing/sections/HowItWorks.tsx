@@ -14,14 +14,14 @@ export function HowItWorks() {
     <section id="how" className="border-y border-edge bg-card/60 px-10 py-28 backdrop-blur max-[820px]:px-4 max-[820px]:py-16">
       <div className="mx-auto flex max-w-[1240px] flex-col gap-14">
         <div className="flex flex-col items-center gap-3 text-center">
-          <span className="text-ocean-d text-xs font-bold uppercase tracking-[.14em]">{t('How it works')}</span>
+          <span className="text-xs font-bold uppercase tracking-[.14em] text-accent">{t('How it works')}</span>
           <h2 className="text-5xl font-extrabold tracking-tight max-[820px]:text-4xl">{t('Find. Protect. Delete. Prove.')}</h2>
         </div>
         <div className="grid grid-cols-4 gap-6 max-[1100px]:grid-cols-2 max-[640px]:grid-cols-1">
           {STEPS.map(([icon, h, p], i) => (
-            <div key={h} className="glass flex flex-col gap-3 rounded-[26px] border border-edge p-6 shadow-card ring-1 ring-line/50 transition duration-300 hover:-translate-y-1 hover:shadow-pop">
-              <span className="bg-ocean inline-flex size-14 items-center justify-center rounded-[20px] text-white shadow-glow"><Icon name={icon} size="lg" /></span>
-              <span className="text-ocean-d text-[13px] font-bold tracking-widest">0{i + 1}</span>
+            <div key={h} className="glass flex flex-col gap-3 rounded-2xl border border-edge p-6 shadow-card ring-1 ring-line/50 transition duration-300 hover:-translate-y-1 hover:shadow-pop">
+              <span className="inline-flex size-14 items-center justify-center rounded-xl border border-line2 text-accent"><Icon name={icon} size="lg" /></span>
+              <span className="font-display text-2xl italic text-accent">0{i + 1}</span>
               <h3 className="text-xl font-bold">{t(h)}</h3>
               <p className="text-mute">{t(p)}</p>
             </div>

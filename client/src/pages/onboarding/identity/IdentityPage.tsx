@@ -9,7 +9,7 @@ import { cn } from '@/lib/format';
 function Pill({ children, tone = 'plain' }: { children: React.ReactNode; tone?: 'plain' | 'ok' | 'bad' }) {
   return (
     <span className={cn('inline-flex h-9 min-w-0 items-center gap-1.5 whitespace-nowrap rounded-[10px] px-2.5 text-[12.5px] font-semibold',
-      tone === 'ok' ? 'bg-accent-b/16 text-accent-b' : tone === 'bad' ? 'bg-[#E5484D]/18 text-[#FF8A8F]' : 'bg-white/7 text-on')}>
+      tone === 'ok' ? 'bg-accent-b/16 text-accent-b' : tone === 'bad' ? 'bg-[#A63D2F]/18 text-[#FF8A8F]' : 'bg-white/7 text-on')}>
       {children}
     </span>
   );
@@ -58,9 +58,9 @@ export default function IdentityPage() {
               {flows.map(f => (
                 <div key={f.name} className="contents">
                   <Pill><CompanyAvatar company={{ name: f.name, color: f.color }} size="sm" className="!size-6 !rounded-md !text-[11px]" /><span translate="no">{f.name}</span></Pill>
-                  <Icon name="cr" size="sm" className="text-[#7F8DA8]" />
+                  <Icon name="cr" size="sm" className="text-[#9DB5A7]" />
                   <Pill><Icon name="sparkle" size="sm" className="text-accent-b" />{t(f.mid)}</Pill>
-                  <Icon name="cr" size="sm" className="text-[#7F8DA8]" />
+                  <Icon name="cr" size="sm" className="text-[#9DB5A7]" />
                   <span className="min-w-0 justify-self-start"><Pill tone={f.tone}><Icon name={f.icon} size="sm" /><span className="truncate">{t(f.end)}</span></Pill></span>
                 </div>
               ))}

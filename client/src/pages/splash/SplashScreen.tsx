@@ -27,9 +27,9 @@ export default function SplashScreen() {
   return (
     <main className="dots relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-navy p-6 text-on">
       {/* slow aurora */}
-      <span className="aurora-blob left-[-10%] top-[-15%] size-[620px] bg-[#14B8A6]/30" aria-hidden="true" />
-      <span className="aurora-blob bottom-[-20%] right-[-10%] size-[680px] bg-[#2F66D6]/35 [animation-delay:-9s]" aria-hidden="true" />
-      <span className="aurora-blob left-[35%] top-[55%] size-[420px] bg-[#5EEAD4]/15 [animation-delay:-15s]" aria-hidden="true" />
+      <span className="aurora-blob left-[-10%] top-[-15%] size-[620px] bg-[#A8D5BE]/30" aria-hidden="true" />
+      <span className="aurora-blob bottom-[-20%] right-[-10%] size-[680px] bg-[#C9B98F]/35 [animation-delay:-9s]" aria-hidden="true" />
+      <span className="aurora-blob left-[35%] top-[55%] size-[420px] bg-[#A8D5BE]/15 [animation-delay:-15s]" aria-hidden="true" />
       <span className="particles left-1/2 top-1/2 h-[640px] w-[820px] -translate-x-1/2 -translate-y-1/2 opacity-40" aria-hidden="true" />
       {/* calm ripples, like a drop in still water */}
       <span className="absolute size-[340px] animate-ripple rounded-full border border-accent-b/30" aria-hidden="true" />

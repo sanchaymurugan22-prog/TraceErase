@@ -11,7 +11,7 @@ const TONES: Record<Tone, string> = {
 
 export function Chip({ tone = 'neutral', icon, children, className }: { tone?: Tone; icon?: IconName; children: React.ReactNode; className?: string }) {
   return (
-    <span className={cn('inline-flex h-7 flex-none items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-[13px] font-semibold leading-4', TONES[tone], className)}>
+    <span className={cn('inline-flex h-7 flex-none items-center gap-1.5 whitespace-nowrap rounded-md px-2.5 text-[13px] font-semibold leading-4', TONES[tone], className)}>
       {icon && <Icon name={icon} size="xs" />}{children}
     </span>
   );

@@ -18,7 +18,7 @@ export default function LanguageScreen() {
       <aside className="dots relative isolate flex flex-[0_0_42%] flex-col gap-8 overflow-hidden bg-navy px-14 py-10 text-on max-[1100px]:p-8 max-[820px]:basis-auto">
         <span className="particles -right-40 top-1/4 h-[520px] w-[660px] opacity-50" aria-hidden="true" />
         <span className="aurora-blob -left-24 top-1/3 size-[380px] bg-accent-b/20" aria-hidden="true" />
-        <span className="aurora-blob -bottom-32 right-0 size-[360px] bg-[#3B6FE0]/25 [animation-delay:-11s]" aria-hidden="true" />
+        <span className="aurora-blob -bottom-32 right-0 size-[360px] bg-[#C9B98F]/25 [animation-delay:-11s]" aria-hidden="true" />
         <Logo />
         <div className="mt-auto flex flex-col gap-4">
           <h1 className="text-5xl font-extrabold leading-[1.15] tracking-tight text-white max-[820px]:text-3xl">{t('Your privacy, in your language.')}</h1>
@@ -46,7 +46,7 @@ export default function LanguageScreen() {
           <div role="radiogroup" aria-label={t('Language')} className="grid grid-cols-3 gap-3 max-[640px]:grid-cols-2">
             {LANGUAGES.map(l => (
               <button key={l.code} role="radio" aria-checked={lang === l.code} onClick={() => setLanguage(l.code)} translate="no"
-                className={cn('glass flex items-center gap-3.5 rounded-[20px] border-[1.5px] px-[18px] py-4 text-left transition duration-200 hover:-translate-y-0.5',
+                className={cn('glass flex items-center gap-3.5 rounded-xl border-[1.5px] px-[18px] py-4 text-left transition duration-200 hover:-translate-y-0.5',
                   lang === l.code ? 'border-accent bg-ocean-soft shadow-[0_12px_30px_-14px_rgba(20,184,166,.6)] ring-4 ring-accent-b/15' : 'border-line/80 hover:border-line2 hover:shadow-card')}>
                 <span className={cn('size-5 flex-none rounded-full border-[1.5px]', lang === l.code ? 'border-[6px] border-accent' : 'border-line2')} />
                 <span className="flex flex-col">

@@ -10,11 +10,9 @@ import { Footer } from './sections/Footer';
 export default function LandingPage() {
   return (
     <div className="min-h-screen">
-      <section className="dots relative isolate overflow-hidden bg-navy text-on">
-        <span className="aurora-blob -left-40 -top-40 size-[640px] bg-[#14B8A6]/25" aria-hidden="true" />
-        <span className="aurora-blob -right-40 top-10 size-[620px] bg-[#2F66D6]/30 [animation-delay:-10s]" aria-hidden="true" />
-        <span className="particles right-0 top-10 h-[640px] w-[820px] opacity-70 max-[1100px]:hidden" aria-hidden="true" />
-        <PublicNav />
+      <section className="relative isolate overflow-hidden border-b border-line text-ink">
+        <span className="aurora-blob -right-40 -top-40 size-[620px] bg-[#E3D6B4]/60" aria-hidden="true" />
+        <div className="mx-auto max-w-[1320px] border-b border-line"><PublicNav light /></div>
         <Hero />
       </section>
       <Problem />

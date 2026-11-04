@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Link } from '@/lib/router';
 import { useT } from '@/i18n/I18nProvider';
 
-export const STATUS_COLOR: Record<string, string> = { verified: '#127A3E', partial: '#8A5A00', claimed: '#1D4ED8', overdue: '#B3361B', 'no-response': '#A3470A', sent: '#4A5568', 'not-asked': '#94A3B8', likely: '#C4CDDC' };
+export const STATUS_COLOR: Record<string, string> = { verified: '#2F6E4F', partial: '#8A5F17', claimed: '#3B5B8C', overdue: '#A3472A', 'no-response': '#9A541C', sent: '#59625C', 'not-asked': '#A9A493', likely: '#CFC6B2' };
 export type Selection = { type: 'company' | 'partner' | 'kind'; id: string } | null;
 const cut = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
 
@@ -58,7 +58,7 @@ export function MapCanvas({ data, filter, sel, onSelect }: { data: any; filter: 
           return <path key={'p' + i} d={`M${x1} ${a}C${x1 + 90} ${a} ${x2 - 90} ${b} ${x2} ${b}`} fill="none" stroke={color} strokeWidth={e.kind === 'ignored' ? 2.5 : hot ? 2.5 : 1.6} strokeDasharray={e.kind === 'likely' ? '5 5' : undefined} opacity={!active || hot ? 1 : 0.35} />;
         })}
         {L.leaks.map((l: any) => <path key={'l' + l.id} d={`M${L.pPos[l.from] != null ? X.pa + X.paW : X.co + X.coW} ${l.y}H${X.leak}`} fill="none" stroke="#B42318" strokeWidth="2.5" strokeDasharray="6 5" />)}
-        <circle cx={X.you} cy={L.H / 2} r="52" fill="var(--color-brand-s)" /><circle cx={X.you} cy={L.H / 2} r="42" fill="#0A1630" />
+        <circle cx={X.you} cy={L.H / 2} r="52" fill="var(--color-brand-s)" /><circle cx={X.you} cy={L.H / 2} r="42" fill="#1E3F31" />
         <text x={X.you} y={L.H / 2 + 6} textAnchor="middle" fontFamily="Manrope" fontWeight="800" fontSize="18" fill="#fff">{t('You')}</text>
         {L.companies.map((c: any) => (
           <g key={c.id} className="cursor-pointer" role="button" tabIndex={0} aria-label={c.name} onClick={() => onSelect({ type: 'company', id: c.id })} onKeyDown={e => e.key === 'Enter' && onSelect({ type: 'company', id: c.id })}>

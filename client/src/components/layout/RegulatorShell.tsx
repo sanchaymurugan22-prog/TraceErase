@@ -25,20 +25,20 @@ export function RegulatorShell({ children }: { children: React.ReactNode }) {
   const t = useT();
   return (
     <div className="flex min-h-screen max-[820px]:flex-col">
-      <aside className="dots sticky top-0 flex h-screen w-[272px] flex-none flex-col gap-1 overflow-y-auto bg-navy px-4 py-6 text-on max-[820px]:static max-[820px]:h-auto max-[820px]:w-auto max-[820px]:flex-row max-[820px]:items-center max-[820px]:overflow-x-auto max-[820px]:px-3 max-[820px]:py-2.5">
-        <Link to="/regulator" className="flex flex-none items-center gap-2.5 px-2 pb-6 text-white max-[820px]:pb-0"><LogoMark size={32} /><span className="max-[820px]:hidden"><Wordmark /></span></Link>
-        <span className="px-3 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-[.1em] text-[#7F8DA8] max-[820px]:hidden">{t('Regulator console')}</span>
+      <aside className="sticky top-0 flex h-screen w-[268px] flex-none flex-col gap-1 overflow-y-auto border-r border-line bg-side px-4 py-6 text-ink max-[820px]:border-b max-[820px]:border-r-0 max-[820px]:static max-[820px]:h-auto max-[820px]:w-auto max-[820px]:flex-row max-[820px]:items-center max-[820px]:overflow-x-auto max-[820px]:px-3 max-[820px]:py-2.5">
+        <Link to="/regulator" className="flex flex-none items-center gap-2.5 px-2 pb-6 text-ink max-[820px]:pb-0"><LogoMark size={32} dark={false} /><span className="max-[820px]:hidden"><Wordmark dark={false} size={21} /></span></Link>
+        <span className="px-3 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-[.14em] text-mute max-[820px]:hidden">{t('Regulator console')}</span>
         {NAV.map(n => (<div key={n.to} className="contents">
-          {n.group && <span className="px-3 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-[.1em] text-[#7F8DA8] max-[820px]:hidden">{t(n.group)}</span>}
-          <Link to={n.to} className={cn('flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-2xl px-3.5 text-[14.5px] font-semibold transition duration-200 max-[820px]:min-h-9 max-[820px]:text-[13.5px]', isActive(path, n.to) ? 'bg-[linear-gradient(100deg,rgba(45,212,191,.20),rgba(59,111,224,.14))] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)] [&>svg]:text-accent-b' : 'text-onm hover:bg-white/6 hover:text-white')}>
+          {n.group && <span className="px-3 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-[.14em] text-mute max-[820px]:hidden">{t(n.group)}</span>}
+          <Link to={n.to} className={cn('flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-[10px] px-3.5 text-[14.5px] font-medium transition duration-200 max-[820px]:min-h-9 max-[820px]:text-[13.5px]', isActive(path, n.to) ? 'bg-card text-ink shadow-[0_1px_0_#DCD5C6,0_6px_14px_-10px_rgba(27,38,32,.35)] [&>svg]:text-accent' : 'text-ink2 hover:bg-card/60 hover:text-ink')}>
             <Icon name={n.icon} />{t(n.label)}
           </Link>
         </div>))}
-        <div className="glass-dark mt-auto flex flex-col gap-2 rounded-[22px] p-4 max-[820px]:hidden">
-          <span className="text-[13px] text-onm">{t('Signed in as')}</span>
-          <span className="truncate text-sm font-semibold text-white" translate="no">{staff?.email}</span>
-          <span className="text-[13px] text-onm">{t(staff?.org || 'Data Protection Board (demo)')}</span>
-          <Button variant="outline" size="sm" full onClick={async () => { await logoutStaff(); navigate('/welcome'); }}><Icon name="logout" size="sm" />{t('Log out')}</Button>
+        <div className="mt-auto flex flex-col gap-2 rounded-xl border border-dashed border-line2 p-4 max-[820px]:hidden">
+          <span className="text-[13px] text-mute">{t('Signed in as')}</span>
+          <span className="truncate text-sm font-semibold text-ink" translate="no">{staff?.email}</span>
+          <span className="text-[13px] text-mute">{t(staff?.org || 'Data Protection Board (demo)')}</span>
+          <Button variant="secondary" size="sm" full onClick={async () => { await logoutStaff(); navigate('/welcome'); }}><Icon name="logout" size="sm" />{t('Log out')}</Button>
         </div>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">

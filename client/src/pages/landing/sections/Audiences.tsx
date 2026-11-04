@@ -20,12 +20,12 @@ export function Audiences() {
           </CardLink>
         </div>
         <DarkPanel className="isolate items-center gap-5 p-14 text-center max-[820px]:p-8">
-          <span className="aurora-blob -left-20 -top-24 size-[380px] bg-[#14B8A6]/25" aria-hidden="true" />
-          <span className="aurora-blob -bottom-24 -right-16 size-[380px] bg-[#2F66D6]/30 [animation-delay:-9s]" aria-hidden="true" />
+          <span className="aurora-blob -left-20 -top-24 size-[380px] bg-[#A8D5BE]/25" aria-hidden="true" />
+          <span className="aurora-blob -bottom-24 -right-16 size-[380px] bg-[#C9B98F]/30 [animation-delay:-9s]" aria-hidden="true" />
           <h2 className="text-5xl font-extrabold tracking-tight text-white max-[820px]:text-3xl">{t('Take back your data today.')}</h2>
           <p className="text-lg text-onm">{t('Takes 3 minutes. No company has to sign up first.')}</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <ButtonLink to="/signup" size="lg">{t('Create your free account')}</ButtonLink>
+            <ButtonLink to="/signup" size="lg" variant="white">{t('Create your free account')}</ButtonLink>
             <ButtonLink to="/scores" size="lg" variant="outline">{t('See company scores')}</ButtonLink>
           </div>
         </DarkPanel>

@@ -51,27 +51,27 @@ export function AppShell({ children, active }: { children: React.ReactNode; acti
 
   return (
     <div className="flex min-h-screen max-[820px]:flex-col">
-      <aside className="dots sticky top-0 flex h-screen w-[272px] flex-none flex-col gap-1 overflow-y-auto bg-navy px-4 py-6 text-on max-[820px]:static max-[820px]:h-auto max-[820px]:w-auto max-[820px]:flex-row max-[820px]:items-center max-[820px]:overflow-x-auto max-[820px]:px-3 max-[820px]:py-2.5">
-        <Link to="/app" className="flex flex-none items-center gap-2.5 px-2 pb-6 text-white max-[820px]:pb-0" aria-label="TraceErase"><LogoMark size={32} /><span className="max-[820px]:hidden"><Wordmark /></span></Link>
+      <aside className="sticky top-0 flex h-screen w-[268px] flex-none flex-col gap-1 overflow-y-auto border-r border-line bg-side px-4 py-6 text-ink max-[820px]:border-b max-[820px]:border-r-0 max-[820px]:static max-[820px]:h-auto max-[820px]:w-auto max-[820px]:flex-row max-[820px]:items-center max-[820px]:overflow-x-auto max-[820px]:px-3 max-[820px]:py-2.5">
+        <Link to="/app" className="flex flex-none items-center gap-2.5 px-2 pb-6 text-ink max-[820px]:pb-0" aria-label="TraceErase"><LogoMark size={32} dark={false} /><span className="max-[820px]:hidden"><Wordmark dark={false} size={21} /></span></Link>
         <nav className="flex flex-col gap-0.5 max-[820px]:flex-row max-[820px]:gap-1" aria-label={t('Main')}>
           {NAV.map((n, i) => 'section' in n
-            ? <span key={i} className="px-3.5 pb-1.5 pt-5 text-[11px] font-bold uppercase tracking-[.14em] text-[#6F8BA3] max-[820px]:hidden">{t(n.section)}</span>
+            ? <span key={i} className="px-3.5 pb-1.5 pt-5 text-[11px] font-bold uppercase tracking-[.14em] text-mute max-[820px]:hidden">{t(n.section)}</span>
             : (
               <Link key={n.to} to={n.to} aria-current={current === n.to ? 'page' : undefined}
-                className={cn('flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-2xl px-3.5 text-[14.5px] font-semibold transition duration-200 max-[820px]:min-h-9 max-[820px]:text-[13.5px]',
-                  current === n.to ? 'bg-[linear-gradient(100deg,rgba(45,212,191,.20),rgba(59,111,224,.14))] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)] [&>svg]:text-accent-b' : 'text-onm hover:bg-white/6 hover:text-white')}>
+                className={cn('flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-[10px] px-3.5 text-[14.5px] font-medium transition duration-200 max-[820px]:min-h-9 max-[820px]:text-[13.5px]',
+                  current === n.to ? 'bg-card text-ink shadow-[0_1px_0_#DCD5C6,0_6px_14px_-10px_rgba(27,38,32,.35)] [&>svg]:text-accent' : 'text-ink2 hover:bg-card/60 hover:text-ink')}>
                 <Icon name={n.icon} />{t(n.label)}
-                {n.count === 'companies' && counts.companies > 0 && <span className="ml-auto rounded-full bg-white/12 px-2 text-xs font-bold leading-[22px] text-white">{counts.companies}</span>}
-                {n.count === 'alerts' && counts.alerts > 0 && <span className="ml-auto rounded-full bg-[linear-gradient(120deg,#F06A6E,#E5484D)] px-2 text-xs font-bold leading-[22px] text-white shadow-[0_4px_12px_-3px_rgba(229,72,77,.6)]">{counts.alerts}</span>}
+                {n.count === 'companies' && counts.companies > 0 && <span className="ml-auto text-[13px] font-semibold text-mute">{counts.companies}</span>}
+                {n.count === 'alerts' && counts.alerts > 0 && <span className="ml-auto rounded-md bg-leak px-1.5 text-xs font-bold leading-[20px] text-white">{counts.alerts}</span>}
               </Link>
             ))}
         </nav>
-        <div className="glass-dark mt-auto flex flex-col gap-2.5 rounded-[22px] p-4 max-[820px]:hidden">
-          <span className="text-[13px] text-onm">{t('Protected number')}</span>
+        <div className="mt-auto flex flex-col gap-2.5 rounded-xl border border-dashed border-line2 p-4 max-[820px]:hidden">
+          <span className="text-[13px] text-mute">{t('Protected number')}</span>
           {user?.protectedNumber
-            ? <><span className="font-mono text-[15px] text-white" translate="no">{user.protectedNumber}</span><span className="text-[13px] text-onm">{t('Calls and SMS from apps you use ring through')}</span></>
-            : <span className="text-[13px] text-onm">{t('Not available yet: phone protection needs a paid phone service. Try it in the demo.')}</span>}
-          {flags?.protectedEmail !== false && <ButtonLink to="/app/protect" variant="outline" size="sm" full><Icon name="plus" size="sm" />{t('New protected email')}</ButtonLink>}
+            ? <><span className="font-mono text-[15px] text-ink" translate="no">{user.protectedNumber}</span><span className="text-[13px] text-mute">{t('Calls and SMS from apps you use ring through')}</span></>
+            : <span className="text-[13px] text-mute">{t('Not available yet: phone protection needs a paid phone service. Try it in the demo.')}</span>}
+          {flags?.protectedEmail !== false && <ButtonLink to="/app/protect" variant="secondary" size="sm" full><Icon name="plus" size="sm" />{t('New protected email')}</ButtonLink>}
         </div>
       </aside>
 
@@ -87,7 +87,7 @@ export function AppShell({ children, active }: { children: React.ReactNode; acti
           <ButtonLink to="/app/delete" aria-label={t('Delete my data')} className="max-[640px]:w-11 max-[640px]:px-0"><Icon name="trash" /><span className="max-[640px]:hidden">{t('Delete my data')}</span></ButtonLink>
           <LanguageMenu />
           <Link to="/app/alerts" aria-label={t('Alerts')} className="relative inline-flex size-11 items-center justify-center rounded-full border border-line bg-card/80 text-ink2 transition hover:bg-card hover:shadow-card">
-            <Icon name="bell" />{counts.alerts > 0 && <span className="absolute right-[11px] top-2.5 size-2 rounded-full border-2 border-white bg-[#E5484D]" />}
+            <Icon name="bell" />{counts.alerts > 0 && <span className="absolute right-[11px] top-2.5 size-2 rounded-full border-2 border-white bg-[#A63D2F]" />}
           </Link>
           <Link to="/app/settings" aria-label={t('Account')} className="bg-ocean inline-flex size-10 flex-none items-center justify-center rounded-full font-display text-sm font-bold text-white shadow-glow ring-2 ring-white hover:text-white" translate="no">{initials(user?.name)}</Link>
         </header>

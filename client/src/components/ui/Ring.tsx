@@ -2,7 +2,7 @@
 export function Ring({ pct, size = 150, color, children }: { pct: number; size?: number; color?: string; children?: React.ReactNode }) {
   const inner = size - 32;
   return (
-    <div className="grid flex-none place-items-center rounded-full" style={{ width: size, height: size, background: color ? `conic-gradient(${color} 0 ${pct}%, var(--color-soft2) ${pct}% 100%)` : `conic-gradient(#14B8A6 0%, #2F66D6 ${pct}%, var(--color-soft2) ${pct}% 100%)`, boxShadow: '0 12px 30px -14px rgba(47,102,214,.45)' }}>
+    <div className="grid flex-none place-items-center rounded-full" style={{ width: size, height: size, background: color ? `conic-gradient(${color} 0 ${pct}%, var(--color-soft2) ${pct}% 100%)` : `conic-gradient(#3F7A62 0%, #1E3F31 ${pct}%, var(--color-soft2) ${pct}% 100%)`, boxShadow: '0 12px 30px -18px rgba(30,63,49,.5)' }}>
       <div className="flex flex-col items-center justify-center rounded-full bg-card" style={{ width: inner, height: inner }}>{children}</div>
     </div>
   );

@@ -22,7 +22,7 @@ export default function LeakPage({ params }: { params: Record<string, string> })
 
   return (
     <AppShell active="/app/alerts">
-      <section className="flex flex-wrap items-center gap-5 rounded-[20px] border border-[#F6C4BF] bg-leak-s p-7">
+      <section className="flex flex-wrap items-center gap-5 rounded-xl border border-[#F6C4BF] bg-leak-s p-7">
         <Tile icon="siren" tone="leak" size="lg" />
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <Chip tone="leak" className="self-start">{t('Leak detected')} · {fmtDateTime(l.at)}</Chip>

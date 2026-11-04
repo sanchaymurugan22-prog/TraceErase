@@ -13,7 +13,7 @@ export function Problem() {
     <section className="px-10 py-28 max-[820px]:px-4 max-[820px]:py-16">
       <div className="mx-auto flex max-w-[1240px] flex-col gap-12">
         <div className="flex max-w-[760px] flex-col gap-3">
-          <span className="text-ocean-d text-xs font-bold uppercase tracking-[.14em]">{t('The problem')}</span>
+          <span className="text-xs font-bold uppercase tracking-[.14em] text-accent">{t('The problem')}</span>
           <h2 className="text-5xl font-extrabold leading-[56px] tracking-tight max-[820px]:text-4xl">{t("Deleting your account doesn't delete your data.")}</h2>
           <p className="text-lg leading-[30px] text-mute">{t('Apps share your details with payment, delivery and advertising partners. When you leave, those copies stay behind, and nobody can show you otherwise.')}</p>
         </div>

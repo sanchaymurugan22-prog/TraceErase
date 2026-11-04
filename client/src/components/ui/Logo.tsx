@@ -1,8 +1,8 @@
 // TraceErase logo: a shield whose right edge dissolves into pixels (data being erased), with a check.
 export function LogoMark({ size = 32, dark = true }: { size?: number; dark?: boolean }) {
-  const s = dark ? '#FFFFFF' : '#0A1630';
-  const tick = dark ? '#2DD4BF' : '#0B7A6E';
-  const px = dark ? '#2DD4BF' : '#0B8F80';
+  const s = dark ? '#F5F2EA' : 'var(--color-ink)';
+  const tick = dark ? '#A8D5BE' : 'var(--color-accent)';
+  const px = dark ? '#A8D5BE' : 'var(--color-accent)';
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="flex-none">
       <path d="M32 8L13 15v16c0 11.5 8 19.5 19 24.5" fill="none" stroke={s} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
@@ -18,8 +18,8 @@ export function LogoMark({ size = 32, dark = true }: { size?: number; dark?: boo
 
 export function Wordmark({ dark = true, size = 20 }: { dark?: boolean; size?: number }) {
   return (
-    <span className="whitespace-nowrap font-display font-extrabold tracking-tight" style={{ fontSize: size, lineHeight: 1, color: dark ? '#fff' : 'var(--color-ink)' }} translate="no">
-      Trace<span style={{ color: dark ? '#2DD4BF' : 'var(--color-accent)' }}>Erase</span>
+    <span className="whitespace-nowrap font-display tracking-tight" style={{ fontSize: size * 1.08, lineHeight: 1, color: dark ? '#F5F2EA' : 'var(--color-ink)' }} translate="no">
+      Trace<span style={{ color: dark ? '#A8D5BE' : 'var(--color-accent)', fontStyle: 'italic', fontWeight: 500 }}>Erase</span>
     </span>
   );
 }

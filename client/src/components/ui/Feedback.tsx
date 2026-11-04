@@ -48,7 +48,7 @@ const BANNERS = {
 
 export function Banner({ tone = 'info', icon, children, className }: { tone?: keyof typeof BANNERS; icon?: IconName; children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('flex items-center gap-3.5 rounded-2xl border px-[18px] py-4 text-ink', BANNERS[tone], className)}>
+    <div className={cn('flex items-center gap-3.5 rounded-xl border px-[18px] py-4 text-ink', BANNERS[tone], className)}>
       {icon && <Icon name={icon} />}
       {children}
     </div>
