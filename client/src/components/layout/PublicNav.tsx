@@ -15,7 +15,7 @@ export function PublicNav({ light }: { light?: boolean }) {
       <Link to="/welcome" aria-label="TraceErase" className="shrink-0"><Logo dark={!light} size={34} /></Link>
       {/* One fixed-height row: links that don't fit in a long language wrap onto a hidden second row instead of
           running into the buttons. They are all repeated in the footer. */}
-      <nav className="ml-4 flex h-8 min-w-0 flex-1 flex-wrap items-center gap-x-6 overflow-hidden max-[1100px]:invisible" aria-label={t('Main')}>
+      <nav className="ml-4 flex h-8 min-w-0 flex-1 flex-wrap items-center gap-x-6 overflow-hidden max-[1100px]:invisible max-[820px]:hidden" aria-label={t('Main')}>
         <a className={linkCls} href="/welcome#how">{t('How it works')}</a>
         <a className={linkCls} href="/welcome#ai">{t('AI features')}</a>
         <Link className={linkCls} to="/scores">{t('Company scores')}</Link>
@@ -27,7 +27,7 @@ export function PublicNav({ light }: { light?: boolean }) {
           : user?.verified ? <ButtonLink to="/app" variant={light ? 'primary' : 'white'}>{t('Open dashboard')}</ButtonLink>
           : <>
               <ButtonLink to="/login" variant={light ? 'secondary' : 'outline'}>{t('Log in')}</ButtonLink>
-              <ButtonLink to="/signup" variant={light ? 'primary' : 'white'}>{t('Get started')}</ButtonLink>
+              <ButtonLink to="/signup" variant={light ? 'primary' : 'white'} className="max-[520px]:hidden">{t('Get started')}</ButtonLink>
             </>}
       </div>
     </header>

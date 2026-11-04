@@ -18,6 +18,7 @@ const write = (k: string, v: string) => { try { v ? localStorage.setItem(k, v) :
 export const setUserToken = (t: string) => write(USER_KEY, t);
 export const setStaffToken = (t: string) => write(STAFF_KEY, t);
 export const clearTokens = () => { write(USER_KEY, ''); write(STAFF_KEY, ''); };
+export const hasSavedSignIn = () => !!(read(USER_KEY) || read(STAFF_KEY));
 
 export const apiUrl = (path: string) => API_URL + (path.startsWith('/api') ? path : '/api' + path);
 

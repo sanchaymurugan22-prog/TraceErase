@@ -36,6 +36,14 @@ registerRoutes(app);
 const dist = path.resolve(SERVER_ROOT, '..', 'client', 'dist');
 if (fs.existsSync(path.join(dist, 'index.html'))) app.static(dist);
 
+// Keep the API up if a background task (for example a slow blockchain link) fails outside a request.
+process.on('unhandledRejection', (e) => console.error('[unhandled]', e?.shortMessage || e?.message || e));
+process.on('uncaughtException', (e) => {
+  console.error('[uncaught]', e?.stack || e);
+  // Errors from the blockchain library are logged and survived; anything else restarts the server cleanly.
+  if (!/ethers|JsonRpc|provider/i.test(String(e?.stack || e?.message || ''))) process.exit(1);
+});
+
 app.listen(config.port, () => {
   const ai = aiStatus();
   console.log(`\n  TraceErase API running on http://localhost:${config.port}`);

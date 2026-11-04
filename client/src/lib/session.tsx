@@ -1,6 +1,6 @@
 // Session: the signed-in user (or regulator), server flags and AI status.
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { clearTokens, get, patch, post, setStaffToken } from './api';
+import { ApiError, clearTokens, get, hasSavedSignIn, patch, post, setStaffToken } from './api';
 import { useI18n } from '@/i18n/I18nProvider';
 import type { AiStatus, Flags, Me, Settings, Staff, User } from '@/types/api';
 
@@ -26,13 +26,19 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<{ loading: boolean; user: User | null; staff: Staff | null; flags: Flags; ai: AiStatus }>({ loading: true, user: null, staff: null, flags: {}, ai: noAi });
 
   const refresh = useCallback(async () => {
-    try {
-      const me = await get<Me>('/me');
-      setState({ loading: false, user: me.user, staff: me.staff, flags: me.flags || {}, ai: me.ai || noAi });
-      return me.user;
-    } catch {
-      setState(s => ({ ...s, loading: false }));
-      return null;
+    // A network hiccup (or the free server waking up) must not look like "signed out": with a saved sign-in,
+    // try a few more times before giving up.
+    for (let attempt = 0; ; attempt++) {
+      try {
+        const me = await get<Me>('/me');
+        setState({ loading: false, user: me.user, staff: me.staff, flags: me.flags || {}, ai: me.ai || noAi });
+        return me.user;
+      } catch (e) {
+        const temporary = !(e instanceof ApiError) || e.status === 0 || e.status >= 500;
+        if (temporary && hasSavedSignIn() && attempt < 4) { await new Promise(r => setTimeout(r, 2500 * (attempt + 1))); continue; }
+        setState(s => ({ ...s, loading: false }));
+        return null;
+      }
     }
   }, []);
   useEffect(() => { refresh(); }, [refresh]);

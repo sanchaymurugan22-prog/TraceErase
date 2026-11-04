@@ -73,7 +73,6 @@ for (const url of RPCS) {
     const wei = await Promise.race([provider.getBalance(address), new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 8000))]);
     balance = ethers.formatEther(wei);
   } catch { /* try the next public link */ }
-  finally { try { provider.destroy(); } catch { /* ignore */ } }
   if (balance !== null) break;
 }
 if (balance === null) console.log('  Balance: could not reach Polygon Amoy right now. Try again in a minute.');

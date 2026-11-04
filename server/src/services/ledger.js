@@ -57,31 +57,38 @@ const queueAnchor = (batch) => {
 
 let ethersLib = null;
 let liveRpc = null; // { url, provider, until }
+// One provider per link, reused and never destroyed: destroying an ethers provider while a request is still
+// in flight can throw outside our code and stop the server.
+const providers = new Map();
+const providerFor = (ethers, url) => {
+  if (!providers.has(url)) {
+    const network = ethers.Network.from(config.chain.chainId); // fixed network: no auto-detect retry loops
+    providers.set(url, new ethers.JsonRpcProvider(url, network, { staticNetwork: network }));
+  }
+  return providers.get(url);
+};
 async function chainClient() {
   if (!ethersLib) ethersLib = (await import('ethers')).ethers;
   const ethers = ethersLib;
   if (!liveRpc || liveRpc.until < Date.now()) {
-    // Fixed network (no auto-detect), so a dead link fails fast instead of retrying forever.
-    const network = ethers.Network.from(config.chain.chainId);
     let found = null, lastErr = null;
     for (const url of String(config.chain.rpcUrl).split(',').map(s => s.trim()).filter(Boolean)) {
-      const provider = new ethers.JsonRpcProvider(url, network, { staticNetwork: network });
+      const provider = providerFor(ethers, url);
       try {
         await Promise.race([provider.getBlockNumber(), new Promise((_, rej) => setTimeout(() => rej(new Error('No answer from ' + url)), 7000))]);
         found = { url, provider, until: Date.now() + 10 * 60000 };
         break;
-      } catch (e) { lastErr = e; try { provider.destroy(); } catch { /* ignore */ } }
+      } catch (e) { lastErr = e; }
     }
     if (!found) throw new Error('Could not reach the blockchain: ' + (lastErr?.shortMessage || lastErr?.message || 'no RPC link set'));
-    if (liveRpc && liveRpc.provider !== found.provider) { try { liveRpc.provider.destroy(); } catch { /* ignore */ } }
     liveRpc = found;
   }
   const provider = liveRpc.provider;
   const wallet = new ethers.Wallet(config.chain.privateKey.startsWith('0x') ? config.chain.privateKey : '0x' + config.chain.privateKey, provider);
   return { ethers, provider, wallet };
 }
-// Forget the working link after an error, so the next try picks a healthy one.
-const dropRpc = () => { if (liveRpc) { try { liveRpc.provider.destroy(); } catch { /* ignore */ } liveRpc = null; } };
+// Forget the working link after an error, so the next try checks the links again.
+const dropRpc = () => { liveRpc = null; };
 
 /** Text written on chain for a batch: "TraceErase#<n>:" followed by the 32-byte Merkle root. */
 const payloadFor = (ethers, batch) => ethers.hexlify(ethers.toUtf8Bytes(`TraceErase#${batch.number}:`)) + batch.root.slice(2);

@@ -20,8 +20,8 @@ export function LanguageMenu({ dark, showLabel }: { dark?: boolean; showLabel?: 
     <div className="relative" ref={ref}>
       <button onClick={() => setOpen(o => !o)} aria-haspopup="menu" aria-expanded={open} aria-label={t('Language')}
         className={cn('inline-flex h-11 items-center justify-center gap-2 rounded-full px-3.5 font-semibold transition',
-          dark ? 'text-on/90 hover:bg-white/10' : 'border border-line bg-card text-ink2 hover:bg-soft', !showLabel && 'w-11 px-0')}>
-        <Icon name="globe" />{showLabel && <span translate="no">{languageByCode(lang).native}</span>}
+          dark ? 'text-on/90 hover:bg-white/10' : 'border border-line bg-card text-ink2 hover:bg-soft', !showLabel && 'w-11 px-0', showLabel && 'max-[520px]:w-11 max-[520px]:px-0')}>
+        <Icon name="globe" />{showLabel && <span translate="no" className="max-[520px]:hidden">{languageByCode(lang).native}</span>}
       </button>
       {open && (
         <div role="menu" className="absolute right-0 top-12 z-50 grid w-64 animate-fade grid-cols-2 gap-1 rounded-xl border border-line/70 bg-card p-2 shadow-pop">
