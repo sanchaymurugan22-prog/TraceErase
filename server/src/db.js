@@ -27,6 +27,7 @@ let timer = null;
 
 // Firestore bookkeeping: what each record looked like when it was last saved
 const saved = {};          // collection -> Map(id -> { json, seq })
+let legacyDeletes = [];    // old-format documents to remove once the readable copies are saved
 let seqCounter = 0;
 const nextSeq = () => Date.now() * 1000 + (seqCounter = (seqCounter + 1) % 1000);
 let flushing = null;
@@ -34,12 +35,25 @@ let dirtyWhileFlushing = false;
 export const storageStatus = { storage, loadedAt: null, lastSaveAt: null, lastError: null, writes: 0 };
 
 async function loadFirestore() {
+  let migrated = 0;
   for (const c of COLLECTIONS) {
     data[c] = [];
     saved[c] = new Map();
     if (VOLATILE.has(c)) continue;
-    const rows = await firestore.loadCollection(c);
-    for (const r of rows) { data[c].push(r.rec); saved[c].set(r.rec.id, { json: r.json, seq: r.seq }); }
+    let { rows, legacy } = await firestore.loadCollection(c);
+    // When moving from the old format, keep only the most recent activity entries (saves free-plan writes)
+    if (c === 'activity' && rows.some(r => r.fromLegacy) && rows.length > 3000) rows = rows.slice(-3000);
+    for (const r of rows) {
+      data[c].push(r.rec);
+      // Records read from the old format have no readable copy yet (json: null), so the next save writes them
+      saved[c].set(r.rec.id, { json: r.fromLegacy ? null : JSON.stringify(r.rec), seq: r.order || nextSeq() });
+      if (r.fromLegacy) migrated++;
+    }
+    legacyDeletes.push(...legacy.map(docName => ({ rawPath: `te_${c}/${docName}`, delete: true })));
+  }
+  if (migrated || legacyDeletes.length) {
+    console.log(`[db] Moving ${migrated} records to the readable Firestore format (${legacyDeletes.length} old documents to remove)`);
+    save();
   }
 }
 
@@ -72,14 +86,23 @@ async function flushFirestore() {
       if (old && old.json === json) continue;
       if (json.length > 950_000) { console.warn(`[db] ${c}/${r.id} is too large to save (${json.length} bytes)`); continue; }
       const seq = old?.seq || nextSeq();
-      writes.push({ collection: c, id: r.id, json, seq });
+      writes.push({ collection: c, id: r.id, rec: r, seq, order: seq });
       after.push(() => prev.set(r.id, { json, seq }));
     }
     for (const id of prev.keys()) if (!seen.has(id)) { writes.push({ collection: c, id, delete: true }); after.push(() => prev.delete(id)); }
   }
+  if (writes.length) {
+    await firestore.commit(writes);
+    for (const f of after) f();
+  }
+  // Old-format documents are removed only after every record has a readable copy
+  if (legacyDeletes.length && [...Object.values(saved)].every(m => [...m.values()].every(v => v.json !== null))) {
+    await firestore.commit(legacyDeletes);
+    console.log(`[db] Removed ${legacyDeletes.length} old-format documents`);
+    storageStatus.writes += legacyDeletes.length;
+    legacyDeletes = [];
+  }
   if (!writes.length) return;
-  await firestore.commit(writes);
-  for (const f of after) f();
   storageStatus.lastSaveAt = new Date().toISOString();
   storageStatus.writes += writes.length;
   storageStatus.lastError = null;

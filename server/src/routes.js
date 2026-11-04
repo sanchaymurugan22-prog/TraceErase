@@ -484,7 +484,7 @@ export function registerRoutes(app) {
     return inbound.processEmail({ to, from: mail.from || req.headers['x-envelope-from'], subject: mail.subject, text: text.slice(0, 20000), dkim: mail.dkim || req.headers['x-dkim'] || undefined });
   });
   // Health check (the keep-awake ping) and the scheduled job runner
-  app.get('/api/health', () => ({ ok: true, storage: storageStatus.storage, lastSaveAt: storageStatus.lastSaveAt, saveError: storageStatus.lastError ? true : false, time: new Date().toISOString() }));
+  app.get('/api/health', () => ({ ok: true, storage: storageStatus.storage, lastSaveAt: storageStatus.lastSaveAt, saveError: storageStatus.lastError ? true : false, writes: storageStatus.writes, time: new Date().toISOString() }));
   app.post('/api/cron/tick', async (req) => {
     const secret = config.cronSecret;
     if (!secret ? !isLocal(req) : !sameSecret(req.headers['x-cron-secret'] || req.headers.authorization?.replace(/^Bearer /, ''), secret)) throw forbidden('Bad cron secret');
