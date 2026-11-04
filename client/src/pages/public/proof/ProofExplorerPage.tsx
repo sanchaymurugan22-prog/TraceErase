@@ -15,7 +15,7 @@ interface Seal {
   network: string; txHash: string | null; explorerUrl: string | null; onChain: boolean; confirmed: boolean; pending: boolean;
 }
 interface Ledger {
-  stats: { seals: number; records: number; onChain: number; lastSealAt: string | null; chainUnbroken: boolean; brokenAt: number | null; publicChain: boolean; network: string; intervalSec: number };
+  stats: { seals: number; records: number; onChain: number; lastSealAt: string | null; chainUnbroken: boolean; brokenAt: number | null; publicChain: boolean; network: string; intervalSec: number; waiting?: number; nextSealInSec?: number | null };
   seals: Seal[];
 }
 
@@ -55,6 +55,13 @@ export default function ProofExplorerPage() {
   }, [data]);
 
   const st = data?.stats;
+  // When the ledger was last checked, and a countdown to the next seal (both tick every second)
+  const [checkedAt, setCheckedAt] = useState<number | null>(null);
+  useEffect(() => { if (data) setCheckedAt(Date.now()); }, [data]);
+  const [, tick] = useState(0);
+  useEffect(() => { const id = window.setInterval(() => tick(x => x + 1), 1000); return () => window.clearInterval(id); }, []);
+  const checkedSec = checkedAt ? Math.max(0, Math.round((Date.now() - checkedAt) / 1000)) : null;
+  const nextIn = st?.nextSealInSec != null && checkedAt ? Math.max(0, st.nextSealInSec - Math.round((Date.now() - checkedAt) / 1000)) : null;
   return (
     <div className="min-h-screen">
       <section className="dots relative isolate overflow-hidden bg-navy text-on">
@@ -93,10 +100,25 @@ export default function ProofExplorerPage() {
         {loading && !data && <Spinner />}
 
         {st && (
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-line bg-card px-5 py-3.5 shadow-card">
+            <span className="flex items-center gap-2.5 font-semibold text-ink">
+              <span className="relative inline-flex size-2.5"><span className="absolute inline-flex size-full animate-ping rounded-full bg-ok opacity-60" /><span className="relative inline-flex size-2.5 rounded-full bg-ok" /></span>
+              {t('Ledger online')}
+            </span>
+            <span className="text-sm text-mute">{checkedSec !== null ? (checkedSec < 2 ? t('checked just now') : t('checked {n} seconds ago', { n: checkedSec })) : ''}</span>
+            <span className="ml-auto text-sm font-semibold text-ink2 max-[700px]:ml-0">
+              {(st.waiting || 0) > 0
+                ? <span className="flex items-center gap-2 text-accent"><Icon name="clock" size="sm" />{st.waiting === 1 ? t('1 new record waiting · next seal in {s} seconds', { s: nextIn ?? st.intervalSec }) : t('{n} new records waiting · next seal in {s} seconds', { n: st.waiting || 0, s: nextIn ?? st.intervalSec })}</span>
+                : st.lastSealAt ? t('No new activity since {time} · the next action will be sealed within a minute', { time: fmtTime(st.lastSealAt) }) : t('Waiting for the first action')}
+            </span>
+          </div>
+        )}
+
+        {st && (
           <div className={cn('flex flex-wrap items-center gap-3 rounded-2xl border p-4', st.chainUnbroken ? 'border-ok/25 bg-ok-s' : 'border-leak/30 bg-leak-s')}>
             <span className={cn('inline-flex size-10 flex-none items-center justify-center rounded-xl bg-card', st.chainUnbroken ? 'text-ok' : 'text-leak')}><Icon name={st.chainUnbroken ? 'shieldc' : 'alert'} /></span>
             <span className="min-w-[240px] flex-1">
-              <b className="block text-ink">{st.chainUnbroken ? t('All {n} seals are linked. No record has been changed.', { n: st.seals }) : t('The chain breaks at seal #{n}. A record was changed after it was sealed.', { n: st.brokenAt || 0 })}</b>
+              <b className="block text-ink">{st.seals === 0 ? t('No seals yet. The ledger starts with the first action.') : st.chainUnbroken ? (st.seals === 1 ? t('The first seal is in place. No record has been changed.') : t('All {n} seals are linked. No record has been changed.', { n: st.seals })) : t('The chain breaks at seal #{n}. A record was changed after it was sealed.', { n: st.brokenAt || 0 })}</b>
               <span className="text-sm text-ink2">{t('Each seal contains the code of the seal before it, so changing any old record would break every link after it, and it would show here.')}</span>
             </span>
           </div>

@@ -211,7 +211,11 @@ export function ledgerSeals(limit = 25) {
       onChain: all.filter(b => b.txHash).length, lastSealAt: last ? realTime(last) : null,
       chainUnbroken: !broken, brokenAt: broken, publicChain: chainEnabled(),
       network: chainEnabled() ? config.chain.network : 'TraceErase tamper-proof log',
-      intervalSec: config.batchIntervalSec
+      intervalSec: config.batchIntervalSec,
+      // Live status: records made since the last seal, and when the next seal is due
+      waiting: db.filter('receipts', r => !r.batchId).length,
+      nextSealInSec: lastTickAt ? Math.max(0, Math.round(config.batchIntervalSec - (Date.now() - lastTickAt) / 1000)) : null,
+      serverTime: new Date().toISOString()
     },
     seals
   };
@@ -231,7 +235,9 @@ function retryUnpublished() {
 }
 
 let timer;
+let lastTickAt = 0;
 export function startLedger() {
   clearInterval(timer);
-  timer = setInterval(() => { runBatch().catch(e => console.error('[ledger]', e)); retryUnpublished(); }, config.batchIntervalSec * 1000);
+  lastTickAt = Date.now();
+  timer = setInterval(() => { lastTickAt = Date.now(); runBatch().catch(e => console.error('[ledger]', e)); retryUnpublished(); }, config.batchIntervalSec * 1000);
 }
