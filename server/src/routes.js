@@ -26,7 +26,7 @@ import * as demo from './services/demo.js';
 import * as docs from './services/docs.js';
 import { translate } from './services/i18n.js';
 import { getPolicy } from './services/policy.js';
-import { verifyReceipt, addReceipt, publicReceipt, runBatch, verifyBatchOnChain, chainEnabled } from './services/ledger.js';
+import { verifyReceipt, addReceipt, publicReceipt, runBatch, verifyBatchOnChain, chainEnabled, ledgerSeals } from './services/ledger.js';
 import { publicKeyInfo } from './util/signing.js';
 import * as nominee from './services/nominee.js';
 import { escalate } from './services/requests.js';
@@ -537,6 +537,8 @@ export function registerRoutes(app) {
 
   // ---------- public ----------
   app.get('/api/public/scores', () => stats.companyScores());
+  // Public Proof Explorer: newest seals of the tamper-proof ledger (no personal data)
+  app.get('/api/public/ledger', (req) => ledgerSeals(req.query?.limit));
 
   // ---------- printable documents ----------
   app.get('/api/docs/certificate/:id', async (req, res) => { U(req); res.send(await docs.certificateHtml(req.user, req.params.id)); });

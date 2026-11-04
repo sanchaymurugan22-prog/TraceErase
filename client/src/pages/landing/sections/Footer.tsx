@@ -11,6 +11,7 @@ export function Footer() {
         <div className="flex flex-wrap items-center gap-6 text-[13px]">
           <Link to="/scores" className="text-onm hover:text-white">{t('Company scores')}</Link>
           <Link to="/verify" className="text-onm hover:text-white">{t('Verify a receipt')}</Link>
+          <Link to="/proof" className="text-onm hover:text-white">{t('Proof Explorer')}</Link>
           <Link to="/regulator/login" className="text-onm hover:text-white">{t('Regulator login')}</Link>
           <span className="text-onm">© 2026 TraceErase · Team Cranial Remission · DEXATHON 2026</span>
         </div>

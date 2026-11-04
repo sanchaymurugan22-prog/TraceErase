@@ -1,6 +1,6 @@
 // Public receipt verification: anyone can check a receipt ID against the ledger.
 import { useState } from 'react';
-import { useNavigate, useRouter } from '@/lib/router';
+import { Link, useNavigate, useRouter } from '@/lib/router';
 import { RegulatorShell } from '@/components/layout/RegulatorShell';
 import { useT } from '@/i18n/I18nProvider';
 import { useApi } from '@/hooks/useApi';
@@ -66,6 +66,13 @@ export default function VerifyReceiptPage({ params }: { params: Record<string, s
               </div>
             )}
           </Card>
+        )}
+        {!inConsole && (
+          <Link to="/proof" className="flex items-center gap-3 rounded-2xl border border-accent/25 bg-accent-s p-4 text-ink no-underline hover:border-accent/50 hover:text-ink">
+            <span className="inline-flex size-10 flex-none items-center justify-center rounded-xl bg-card text-accent"><Icon name="cube" /></span>
+            <span className="flex-1"><b className="block">{t('Watch the whole ledger live')}</b><span className="text-sm text-ink2">{t('The Proof Explorer shows every seal as it is made and published, with no personal data.')}</span></span>
+            <Icon name="ar" className="text-accent" />
+          </Link>
         )}
         <Card className="gap-3">
           <h2 className="text-lg font-bold">{t('How this check works')}</h2>

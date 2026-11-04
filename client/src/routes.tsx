@@ -12,6 +12,7 @@ const LanguageScreen = page(() => import('@/pages/language/LanguageScreen'));
 const LandingPage = page(() => import('@/pages/landing/LandingPage'));
 const ScoresPage = page(() => import('@/pages/public/scores/ScoresPage'));
 const VerifyReceiptPage = page(() => import('@/pages/public/verify-receipt/VerifyReceiptPage'));
+const ProofExplorerPage = page(() => import('@/pages/public/proof/ProofExplorerPage'));
 
 // Sign up and log in
 const SignupPage = page(() => import('@/pages/auth/signup/SignupPage'));
@@ -69,6 +70,7 @@ export const ROUTES: [string, RouteComponent][] = [
   ['/welcome', LandingPage],
   ['/scores', ScoresPage],
   ['/verify', VerifyReceiptPage],
+  ['/proof', ProofExplorerPage],
   ['/verify/:id', VerifyReceiptPage],
 
   ['/signup', SignupPage],

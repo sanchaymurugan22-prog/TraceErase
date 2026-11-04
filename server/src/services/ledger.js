@@ -35,7 +35,7 @@ export async function runBatch() {
     const chainHash = sha256(`${prev?.chainHash || '0x0'}|${root}|${number}`);
     const batch = db.insert('batches', {
       number, root, leaves, chainHash, prevChainHash: prev?.chainHash || null, size: leaves.length,
-      anchoredAt: nowIso(), network: 'TraceErase tamper-proof log', txHash: null
+      anchoredAt: nowIso(), sealedAt: new Date().toISOString(), network: 'TraceErase tamper-proof log', txHash: null
     });
     for (const r of pending) db.update('receipts', r.id, { batchId: batch.id, status: 'anchored' });
     queueAnchor(batch);
@@ -180,6 +180,40 @@ export function verifyReceipt(receiptId) {
       explorerUrl: explorerTx(b.txHash), onChainConfirmed: !!b.onChainConfirmed, publicChain: chainEnabled()
     },
     proof
+  };
+}
+
+/**
+ * The public Proof Explorer: the newest seals and whether the whole chain of seals is unbroken.
+ * Only seal numbers, times, counts and codes; never receipts or anything about a person.
+ */
+export function ledgerSeals(limit = 25) {
+  const all = db.all('batches');
+  let prev = '0x0', broken = null;
+  const linked = new Map();
+  for (const x of all) {
+    const ok = !broken && sha256(`${prev}|${x.root}|${x.number}`) === x.chainHash;
+    if (!ok && !broken) broken = x.number;
+    linked.set(x.id, ok);
+    prev = x.chainHash;
+  }
+  const realTime = (b) => b.sealedAt || b.anchoredAt;
+  const n = Math.max(1, Math.min(100, Number(limit) || 25));
+  const seals = all.slice(-n).reverse().map(b => ({
+    number: b.number, sealedAt: realTime(b), records: b.size, root: b.root, chainHash: b.chainHash,
+    linked: linked.get(b.id), network: b.network, txHash: b.txHash || null, explorerUrl: explorerTx(b.txHash),
+    onChain: !!b.txHash, confirmed: !!b.onChainConfirmed, pending: !b.txHash && chainEnabled() && !b.anchorError
+  }));
+  const last = all.at(-1);
+  return {
+    stats: {
+      seals: all.length, records: all.reduce((a, b) => a + (b.size || 0), 0),
+      onChain: all.filter(b => b.txHash).length, lastSealAt: last ? realTime(last) : null,
+      chainUnbroken: !broken, brokenAt: broken, publicChain: chainEnabled(),
+      network: chainEnabled() ? config.chain.network : 'TraceErase tamper-proof log',
+      intervalSec: config.batchIntervalSec
+    },
+    seals
   };
 }
 

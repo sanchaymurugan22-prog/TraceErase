@@ -20,6 +20,7 @@ export function PublicNav({ light }: { light?: boolean }) {
         <a className={linkCls} href="/welcome#ai">{t('AI features')}</a>
         <Link className={linkCls} to="/scores">{t('Company scores')}</Link>
         <Link className={linkCls} to="/verify">{t('Verify a receipt')}</Link>
+        <Link className={linkCls} to="/proof">{t('Proof Explorer')}</Link>
       </nav>
       <div className="flex shrink-0 items-center gap-6 max-[820px]:gap-3">
         <LanguageMenu dark={!light} showLabel />
