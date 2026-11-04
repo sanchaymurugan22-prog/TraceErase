@@ -49,19 +49,39 @@ let chainQueue = Promise.resolve();
 const queueAnchor = (batch) => {
   if (!chainEnabled()) return;
   chainQueue = chainQueue.then(() => anchorOnChain(batch)).catch(e => {
+    dropRpc();
     console.warn('[ledger] on-chain anchoring failed:', e.shortMessage || e.message);
     db.update('batches', batch.id, { anchorError: String(e.shortMessage || e.message).slice(0, 200) });
   });
 };
 
 let ethersLib = null;
+let liveRpc = null; // { url, provider, until }
 async function chainClient() {
   if (!ethersLib) ethersLib = (await import('ethers')).ethers;
   const ethers = ethersLib;
-  const provider = new ethers.JsonRpcProvider(config.chain.rpcUrl, undefined, { staticNetwork: true });
+  if (!liveRpc || liveRpc.until < Date.now()) {
+    // Fixed network (no auto-detect), so a dead link fails fast instead of retrying forever.
+    const network = ethers.Network.from(config.chain.chainId);
+    let found = null, lastErr = null;
+    for (const url of String(config.chain.rpcUrl).split(',').map(s => s.trim()).filter(Boolean)) {
+      const provider = new ethers.JsonRpcProvider(url, network, { staticNetwork: network });
+      try {
+        await Promise.race([provider.getBlockNumber(), new Promise((_, rej) => setTimeout(() => rej(new Error('No answer from ' + url)), 7000))]);
+        found = { url, provider, until: Date.now() + 10 * 60000 };
+        break;
+      } catch (e) { lastErr = e; try { provider.destroy(); } catch { /* ignore */ } }
+    }
+    if (!found) throw new Error('Could not reach the blockchain: ' + (lastErr?.shortMessage || lastErr?.message || 'no RPC link set'));
+    if (liveRpc && liveRpc.provider !== found.provider) { try { liveRpc.provider.destroy(); } catch { /* ignore */ } }
+    liveRpc = found;
+  }
+  const provider = liveRpc.provider;
   const wallet = new ethers.Wallet(config.chain.privateKey.startsWith('0x') ? config.chain.privateKey : '0x' + config.chain.privateKey, provider);
   return { ethers, provider, wallet };
 }
+// Forget the working link after an error, so the next try picks a healthy one.
+const dropRpc = () => { if (liveRpc) { try { liveRpc.provider.destroy(); } catch { /* ignore */ } liveRpc = null; } };
 
 /** Text written on chain for a batch: "TraceErase#<n>:" followed by the 32-byte Merkle root. */
 const payloadFor = (ethers, batch) => ethers.hexlify(ethers.toUtf8Bytes(`TraceErase#${batch.number}:`)) + batch.root.slice(2);
@@ -118,6 +138,7 @@ export async function verifyBatchOnChain(batchId) {
     chainChecks.set(b.id, out);
     return out;
   } catch (e) {
+    dropRpc();
     return { ...base, checked: false, onChain: false, error: String(e.shortMessage || e.message).slice(0, 160) };
   }
 }

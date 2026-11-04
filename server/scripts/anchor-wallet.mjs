@@ -15,7 +15,8 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const SERVER = path.resolve(here, '..');
 const ROOT = path.resolve(SERVER, '..');
 const FILE = path.join(SERVER, 'anchor-wallet.secret.txt');
-const RPCS = ['https://rpc-amoy.polygon.technology', 'https://polygon-amoy.api.onfinality.io/public'];
+const RPCS = ['https://polygon-amoy.drpc.org', 'https://polygon-amoy.api.onfinality.io/public', 'https://rpc-amoy.polygon.technology'];
+const CHAIN_ID = 80002;
 const EXPLORER = 'https://amoy.polygonscan.com';
 
 let ethers;
@@ -64,13 +65,16 @@ console.log(`
 `);
 
 let balance = null;
+// Fixed network (no auto-detect), so a dead link fails fast instead of retrying forever
+const network = ethers.Network.from(CHAIN_ID);
 for (const url of RPCS) {
+  const provider = new ethers.JsonRpcProvider(url, network, { staticNetwork: network });
   try {
-    const provider = new ethers.JsonRpcProvider(url, undefined, { staticNetwork: true });
     const wei = await Promise.race([provider.getBalance(address), new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 8000))]);
     balance = ethers.formatEther(wei);
-    break;
-  } catch { /* try the next public endpoint */ }
+  } catch { /* try the next public link */ }
+  finally { try { provider.destroy(); } catch { /* ignore */ } }
+  if (balance !== null) break;
 }
 if (balance === null) console.log('  Balance: could not reach Polygon Amoy right now. Try again in a minute.');
 else console.log(`  Balance: ${Number(balance).toFixed(4)} test POL ${Number(balance) > 0 ? '✓ ready' : '(empty: get free test POL first)'}`);
@@ -85,3 +89,4 @@ console.log(`
        (Render redeploys by itself. Nothing else to set.)
     4. Check your wallet's activity: ${EXPLORER}/address/${address}
 `);
+process.exit(0);

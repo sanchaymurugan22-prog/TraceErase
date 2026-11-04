@@ -80,7 +80,9 @@ function build() { return {
   // With ANCHOR_CONTRACT set, roots go to the TraceAnchor contract; otherwise each root is written into a
   // zero-value transaction the wallet sends to itself (no contract needed, still public and permanent).
   chain: {
-    rpcUrl: env('ANCHOR_RPC_URL') || (env('ANCHOR_PRIVATE_KEY') ? 'https://rpc-amoy.polygon.technology' : ''),
+    // One or more RPC links (comma separated); tried in order until one answers.
+    rpcUrl: env('ANCHOR_RPC_URL') || (env('ANCHOR_PRIVATE_KEY') ? 'https://polygon-amoy.drpc.org,https://polygon-amoy.api.onfinality.io/public,https://rpc-amoy.polygon.technology' : ''),
+    chainId: num('ANCHOR_CHAIN_ID', 80002),
     privateKey: env('ANCHOR_PRIVATE_KEY'),
     contract: env('ANCHOR_CONTRACT'),
     network: env('ANCHOR_NETWORK_NAME', 'Polygon Amoy'),
